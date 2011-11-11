@@ -1,6 +1,8 @@
 package jku.se.tetris.model;
 
 public interface GameField {
+	public void newStone();
+	
 	public long getScore();
 
 	public Stone getCurrentStone();
