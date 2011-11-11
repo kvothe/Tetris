@@ -1,8 +1,10 @@
 package jku.se.tetris.model;
 
+import jku.se.tetris.model.exception.InvalidActionException;
+
 public interface GameField {
 	public void newGame();
-	public void newStone();
+	public void newStone() throws InvalidActionException;
 
 	public long getScore();
 	public int getLevel();
@@ -12,17 +14,17 @@ public interface GameField {
 
 	public Block[][] getBlocks();
 
-	public void rotateStoneClockwise();
-	public void rotateStoneCounterClockwise();
+	public void rotateStoneClockwise() throws InvalidActionException;
+	public void rotateStoneCounterClockwise() throws InvalidActionException;
 
-	public void moveStoneLeft();
-	public void moveStoneRight();
-	public void moveStoneDown();
-	public void moveStoneToBottom();
+	public void moveStoneLeft() throws InvalidActionException;
+	public void moveStoneRight() throws InvalidActionException;
+	public void moveStoneDown() throws InvalidActionException;
+	public void moveStoneToBottom() throws InvalidActionException;
 
 	public void addFieldChangedListener(GameFieldChangedListener listener);
 	public void removeFieldChangedListener(GameFieldChangedListener listener);
 
 	public void addDataChangedListener(GameDataChangedListener listener);
-	public void removeDataChangedListener(GameDataChangedListener listener);	
+	public void removeDataChangedListener(GameDataChangedListener listener);
 }

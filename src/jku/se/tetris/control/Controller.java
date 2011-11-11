@@ -2,19 +2,25 @@ package jku.se.tetris.control;
 
 import jku.se.tetris.model.GameDataChangedListener;
 import jku.se.tetris.model.GameField;
+import jku.se.tetris.model.exception.InvalidActionException;
 
 public class Controller implements GameDataChangedListener {
-	private static final long START_SPEED = 700;
+	private static final long START_SPEED = 900;
 
 	private GameField gamefield;
 	private long speed;
 
+	// ---------------------------------------------------------------------------
+
 	private long gameStart;
 	private long gameDuration;
 
-	private boolean signalAbort = false;
+	// ---------------------------------------------------------------------------
 
 	private Thread animator;
+	private boolean signalAbort = false;
+
+	// ---------------------------------------------------------------------------
 
 	public Controller(GameField gamefield) {
 		this.gamefield = gamefield;
@@ -25,6 +31,8 @@ public class Controller implements GameDataChangedListener {
 		// --
 		this.gamefield.addDataChangedListener(this);
 	}
+
+	// ---------------------------------------------------------------------------
 
 	public void start() {
 		stop();
@@ -44,6 +52,9 @@ public class Controller implements GameDataChangedListener {
 					}
 				} catch (InterruptedException e) {
 					// ignore
+				} catch (InvalidActionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				// --
 				gameDuration = System.currentTimeMillis() - gameStart;
@@ -56,9 +67,17 @@ public class Controller implements GameDataChangedListener {
 		animator.start();
 	}
 
+	// ---------------------------------------------------------------------------
+
 	public void pause() {
 		signalAbort = true; // TODO implement pause instead of abort
 	}
+
+	public void resume() {
+		// TODO
+	}
+
+	// ---------------------------------------------------------------------------
 
 	public void stop() {
 		signalAbort = true;
@@ -68,33 +87,39 @@ public class Controller implements GameDataChangedListener {
 		}
 	}
 
+	// ---------------------------------------------------------------------------
+
 	public long getGameDuration() {
 		return gameDuration;
 	}
 
+	// ---------------------------------------------------------------------------
+
 	@Override
 	public void scoreChanged(long newScore) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
+
+	// ---------------------------------------------------------------------------
 
 	@Override
 	public void levelChanged(int newLevel) {
-		speed = START_SPEED - (newLevel * 50);
-
+		speed = START_SPEED - (long) ((Math.log(newLevel) / Math.log(2) + 1) * 100);
+		// --
+		System.out.println("Speed: " + speed);
 	}
+
+	// ---------------------------------------------------------------------------
 
 	@Override
 	public void gameStarted() {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
+
+	// ---------------------------------------------------------------------------
 
 	@Override
 	public void gameOver() {
-		// TODO Auto-generated method stub
-		System.out.println("Game Over!");
 		stop();
-
 	}
 }

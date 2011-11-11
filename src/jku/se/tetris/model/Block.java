@@ -53,14 +53,4 @@ public class Block {
 	public int getY() {
 		return y;
 	}
-
-	// ---------------------------------------------------------------------------
-
-	// @Override
-	// public void draw(int xOrigin, int yOrigin) {
-	// if (GraphicsProviderRegistry.hasProvider()) {
-	// GraphicsProviderRegistry.getProvider().drawBlock(xOrigin + getX(),
-	// yOrigin + getY(), getColor());
-	// }
-	// }
 }

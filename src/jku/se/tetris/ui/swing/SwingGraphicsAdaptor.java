@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 
-import jku.se.tetris.model.Block;
 import jku.se.tetris.model.GraphicsAdaptor;
 
 public class SwingGraphicsAdaptor implements GraphicsAdaptor {
@@ -36,12 +35,4 @@ public class SwingGraphicsAdaptor implements GraphicsAdaptor {
 		graphics.drawRect(x, y, blocksize, blocksize);
 
 	}
-
-	@Override
-	public void drawStone(Graphics g, int x, int y, Block[] blocks) {
-		for (Block b : blocks) {
-
-		}
-	}
-
 }

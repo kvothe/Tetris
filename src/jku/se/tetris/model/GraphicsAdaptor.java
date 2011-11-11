@@ -4,6 +4,5 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public interface GraphicsAdaptor {
-	public void drawBlock(Graphics g, int x, int y, Color color);
-	public void drawStone(Graphics g, int x, int y, Block[] blocks);
+	public void drawBlock(Graphics g, int x, int y, Color color);	
 }

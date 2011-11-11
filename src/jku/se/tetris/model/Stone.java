@@ -63,13 +63,6 @@ public class Stone {
 
 	// ---------------------------------------------------------------------------
 
-	private Stone(EStoneShape shape) {
-		this.shape = shape;
-		this.blocks = createShape(shape);
-	}
-
-	// ---------------------------------------------------------------------------
-
 	private Block[] createShape(EStoneShape shape) {
 		//@formatter:off
 		switch (shape) {
@@ -139,7 +132,7 @@ public class Stone {
 	// ---------------------------------------------------------------------------
 
 	public synchronized void rotateClockwise() {
-		orientation = (orientation += 90) % 360;
+		orientation = (orientation + 90) % 360;
 		// --
 		rotate();
 	}
@@ -147,14 +140,18 @@ public class Stone {
 	// ---------------------------------------------------------------------------
 
 	public synchronized void rotateCounterClockwise() {
-		orientation = (orientation -= 90) % 360;
+		orientation = (orientation - 90) % 360;
+		// --
+		if (orientation < 0) {
+			orientation = 360 - Math.abs(orientation);
+		}
 		// --
 		rotate();
 	}
 
 	// ---------------------------------------------------------------------------
 
-	private void rotate() {
+	private void rotate() {		
 		//@formatter:off
 		switch (shape) {
 			case I_SHAPE:	if (orientation == 90 || orientation == 270) blocks = SHAPE_I_90; 
@@ -184,14 +181,4 @@ public class Stone {
 		}
 		//@formatter:on
 	}
-
-	// ---------------------------------------------------------------------------
-
-	// @Override
-	// public void draw(int xOrigin, int yOrigin) {
-	// if (GraphicsProviderRegistry.hasProvider()) {
-	// GraphicsProviderRegistry.getProvider().drawStone(xOrigin + getX(),
-	// yOrigin + getY(), blocks);
-	// }
-	// }
 }

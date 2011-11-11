@@ -2,7 +2,14 @@ package jku.se.tetris.model;
 
 import java.util.ArrayList;
 
+import jku.se.tetris.model.exception.InvalidActionException;
+
 public class GameFieldImpl implements GameField {
+	public static final int MAX_LEVEL = 100;
+	public static final int LEVEL_THRESHOLD = 10000;
+
+	// ---------------------------------------------------------------------------
+
 	private int width;
 	private int height;
 
@@ -10,6 +17,10 @@ public class GameFieldImpl implements GameField {
 
 	private long score;
 	private int level;
+
+	// ---------------------------------------------------------------------------
+
+	private boolean backToBack = false;
 
 	// ---------------------------------------------------------------------------
 
@@ -27,6 +38,10 @@ public class GameFieldImpl implements GameField {
 
 	// ---------------------------------------------------------------------------
 
+	private EGameState gameState;
+
+	// ---------------------------------------------------------------------------
+
 	public GameFieldImpl(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -38,6 +53,8 @@ public class GameFieldImpl implements GameField {
 		// --
 		fieldListeners = new ArrayList<GameFieldChangedListener>();
 		dataListeners = new ArrayList<GameDataChangedListener>();
+		// --
+		gameState = EGameState.INITIALIZED;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -49,20 +66,41 @@ public class GameFieldImpl implements GameField {
 		// --
 		blocks = new Block[height][width];
 		// --
+		gameState = EGameState.PLAYING;
+		// --
+		notifyGameStarted();
+		// --
 		notifyScoreChanged();
+		notifyLevelChanged();
 		notifyBlocksChanged();
-		newStone();
+		// --
+		try {
+			newStone();
+		} catch (InvalidActionException e) {
+			// ignore
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private void checkState() throws InvalidActionException {
+		if (gameState == EGameState.PAUSED || gameState == EGameState.GAMEOVER) {
+			throw new InvalidActionException("action not allowed");
+		}
 	}
 
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void newStone() {
+	public void newStone() throws InvalidActionException {
+		checkState();
+		// --
 		activeStone = new Stone();
 		// --
 		activeStone.move((width / 2) + (activeStone.getWidth() > 1 ? -1 : 0), 0);
 		// --
 		if (checkCollision()) {
+			gameState = EGameState.GAMEOVER;
 			notifyGameOver();
 			return;
 		}
@@ -110,23 +148,41 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void rotateStoneClockwise() {
+	public void rotateStoneClockwise() throws InvalidActionException {
+		checkState();
+		// --
 		synchronized (activeStone) {
-			this.activeStone.rotateClockwise();
+			activeStone.rotateClockwise();
+			// --
+			if (checkCollision()) {
+				activeStone.rotateCounterClockwise();
+			} else {
+				notifyStoneMoved(activeStone.getX(), activeStone.getY());
+			}
 		}
 	}
 
 	@Override
-	public void rotateStoneCounterClockwise() {
+	public void rotateStoneCounterClockwise() throws InvalidActionException {
+		checkState();
+		// --
 		synchronized (activeStone) {
 			this.activeStone.rotateCounterClockwise();
+			// --
+			if (checkCollision()) {
+				activeStone.rotateClockwise();
+			} else {
+				notifyStoneMoved(activeStone.getX(), activeStone.getY());
+			}
 		}
 	}
 
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void moveStoneLeft() {
+	public void moveStoneLeft() throws InvalidActionException {
+		checkState();
+		// --
 		synchronized (activeStone) {
 			int x = activeStone.getX();
 			int y = activeStone.getY();
@@ -144,7 +200,9 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void moveStoneRight() {
+	public void moveStoneRight() throws InvalidActionException {
+		checkState();
+		// --
 		synchronized (activeStone) {
 			int x = activeStone.getX();
 			int y = activeStone.getY();
@@ -162,7 +220,9 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void moveStoneDown() {
+	public void moveStoneDown() throws InvalidActionException {
+		checkState();
+		// --
 		synchronized (activeStone) {
 			int x = activeStone.getX();
 			int y = activeStone.getY();
@@ -183,7 +243,9 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void moveStoneToBottom() {
+	public void moveStoneToBottom() throws InvalidActionException {
+		checkState();
+		// --
 		synchronized (activeStone) {
 			int x = activeStone.getX();
 			int y = activeStone.getY();
@@ -198,10 +260,13 @@ public class GameFieldImpl implements GameField {
 			// --
 			notifyStoneMoved(x, y);
 			// --
+			calculateScoreFreefall(activeStone.getY() - y);
+			// --
 			stoneToBlocks();
 			newStone();
 		}
 	}
+
 	// ---------------------------------------------------------------------------
 
 	@Override
@@ -243,15 +308,7 @@ public class GameFieldImpl implements GameField {
 		// --
 		notifyBlocksChanged();
 		// --
-		int[] full = checkForFullRows();
-		// --
-		if (full.length > 0) {
-			System.out.println("full rows: " + full.length);
-			// --
-			for (int row : full) {
-				removeRow(row);
-			}
-		}
+		checkForFullRows();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -261,30 +318,26 @@ public class GameFieldImpl implements GameField {
 			int x = b.getX() + activeStone.getX();
 			int y = b.getY() + activeStone.getY();
 			// --
-			if (y == height) {
-				System.out.println("height");
+			if (y >= height) {
 				return true;
 			}
-			if (x == width) {
-				System.out.println("width");
+			if (x >= width) {
 				return true;
 			}
-			if (x == -1) {
-				System.out.println("x==-1");
+			if (x < 0) {
 				return true;
 			}
 			// --
 			if (blocks[y][x] != null) {
 				return true;
 			}
-			// TODO
 		}
 		return false;
 	}
 
 	// ---------------------------------------------------------------------------
 
-	private int[] checkForFullRows() {
+	private void checkForFullRows() {
 		ArrayList<Integer> tmpRows = new ArrayList<Integer>();
 		// --
 		for (int i = 0; i < height; i++) {
@@ -302,21 +355,62 @@ public class GameFieldImpl implements GameField {
 			}
 		}
 		// --
-		int[] result = new int[tmpRows.size()];
-		for (int i = 0; i < tmpRows.size(); i++) {
-			result[i] = tmpRows.get(i);
+		if (tmpRows.size() > 0) {
+			// --
+			for (int row : tmpRows) {
+				for (int i = row - 1; i >= 0; i--) {
+					for (int j = 0; j < width; j++) {
+						blocks[i + 1][j] = blocks[i][j];
+					}
+				}
+			}
+			// --
+			calculateScore(tmpRows.size());
 		}
-		// --
-		return result;
 	}
 
 	// ---------------------------------------------------------------------------
 
-	private void removeRow(int row) {
-		for (int i = row - 1; i >= 0; i--) {
-			for (int j = 0; j < width; j++) {
-				blocks[i + 1][j] = blocks[i][j];
+	private void calculateScore(int removedRowCount) {
+		if (removedRowCount > 0) {
+			//@formatter:off
+			switch (removedRowCount) {
+				case 1: score += (100 * level); backToBack = false; break;
+				case 2: score += (300 * level); backToBack = false; break;
+				case 3: score += (500 * level); backToBack = false; break;
+				case 4:
+					if (backToBack) score += (800 * level) / 2;
+					score += (800 * level); 
+					backToBack = true; 
+					break;
+			}		
+			//@formatter:on			
+			notifyScoreChanged();
+			calculateLevel();
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private void calculateScoreFreefall(int distance) {
+		score += 2 * distance;
+		// --
+		notifyScoreChanged();
+		calculateLevel();
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private void calculateLevel() {
+		int tmpLevel = (int) (score / LEVEL_THRESHOLD) + 1;
+		// --
+		if (tmpLevel != this.level) {
+			if (tmpLevel <= MAX_LEVEL) {
+				this.level = tmpLevel;
+			} else {
+				this.level = MAX_LEVEL;
 			}
+			notifyLevelChanged();
 		}
 	}
 
@@ -350,9 +444,14 @@ public class GameFieldImpl implements GameField {
 			l.scoreChanged(score);
 		}
 	}
-	private void notifLevelChanged() {
+	private void notifyLevelChanged() {
 		for (GameDataChangedListener l : dataListeners) {
 			l.levelChanged(level);
+		}
+	}
+	private void notifyGameStarted() {
+		for (GameDataChangedListener l : dataListeners) {
+			l.gameStarted();
 		}
 	}
 	private void notifyGameOver() {
