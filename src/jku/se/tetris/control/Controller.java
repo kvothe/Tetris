@@ -4,7 +4,7 @@ import jku.se.tetris.model.GameDataChangedListener;
 import jku.se.tetris.model.GameField;
 
 public class Controller implements GameDataChangedListener {
-	private static final long START_SPEED = 100;
+	private static final long START_SPEED = 700;
 
 	private GameField gamefield;
 	private long speed;
@@ -65,14 +65,6 @@ public class Controller implements GameDataChangedListener {
 		// --
 		if (animator != null && animator.isAlive()) {
 			animator.interrupt();
-			// --
-			while (animator.isAlive()) {
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -93,8 +85,16 @@ public class Controller implements GameDataChangedListener {
 	}
 
 	@Override
+	public void gameStarted() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void gameOver() {
 		// TODO Auto-generated method stub
+		System.out.println("Game Over!");
+		stop();
 
 	}
 }

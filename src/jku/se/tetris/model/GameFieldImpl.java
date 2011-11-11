@@ -13,7 +13,7 @@ public class GameFieldImpl implements GameField {
 
 	// ---------------------------------------------------------------------------
 
-	private Block[][] gameField;
+	private Block[][] blocks;
 
 	// ---------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ public class GameFieldImpl implements GameField {
 		score = 0;
 		level = 1;
 		// --
-		gameField = new Block[height][width];
+		blocks = new Block[height][width];
 		// --
 		fieldListeners = new ArrayList<GameFieldChangedListener>();
 		dataListeners = new ArrayList<GameDataChangedListener>();
@@ -47,7 +47,7 @@ public class GameFieldImpl implements GameField {
 		score = 0;
 		level = 1;
 		// --
-		gameField = new Block[height][width];
+		blocks = new Block[height][width];
 		// --
 		notifyScoreChanged();
 		notifyBlocksChanged();
@@ -62,7 +62,13 @@ public class GameFieldImpl implements GameField {
 		// --
 		activeStone.move((width / 2) + (activeStone.getWidth() > 1 ? -1 : 0), 0);
 		// --
+		if (checkCollision()) {
+			notifyGameOver();
+			return;
+		}
+		// --
 		notifyStoneAdded();
+		// --
 		nextStone = new Stone();
 		notifyAnnounceNextStone();
 	}
@@ -84,7 +90,7 @@ public class GameFieldImpl implements GameField {
 
 	@Override
 	public Block[][] getBlocks() {
-		return gameField.clone();
+		return blocks.clone();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -125,11 +131,13 @@ public class GameFieldImpl implements GameField {
 			int x = activeStone.getX();
 			int y = activeStone.getY();
 			// --
-			if (x > 0) {
-				activeStone.move(x - 1, y);
-			}
+			activeStone.move(x - 1, y);
 			// --
-			notifyStoneMoved(x, y);
+			if (checkCollision()) {
+				activeStone.move(x, y);
+			} else {
+				notifyStoneMoved(x, y);
+			}
 		}
 	}
 
@@ -141,11 +149,13 @@ public class GameFieldImpl implements GameField {
 			int x = activeStone.getX();
 			int y = activeStone.getY();
 			// --
-			if (x < width - 1) {
-				activeStone.move(x + 1, y);
-			}
+			activeStone.move(x + 1, y);
 			// --
-			notifyStoneMoved(x, y);
+			if (checkCollision()) {
+				activeStone.move(x, y);
+			} else {
+				notifyStoneMoved(x, y);
+			}
 		}
 	}
 
@@ -157,15 +167,16 @@ public class GameFieldImpl implements GameField {
 			int x = activeStone.getX();
 			int y = activeStone.getY();
 			// --
-			// TODO check possible collision
-			if (y + activeStone.getHeight() < height - 1) {
-				activeStone.move(x, y + 1);
-			} else {
+			activeStone.move(x, y + 1);
+			// if this move leads to a collision -> undo move and add to fixed
+			// blocks
+			if (checkCollision()) {
+				activeStone.move(x, y);
 				stoneToBlocks();
 				newStone();
+			} else {
+				notifyStoneMoved(x, y);
 			}
-			// --
-			notifyStoneMoved(x, y);
 		}
 	}
 
@@ -174,11 +185,23 @@ public class GameFieldImpl implements GameField {
 	@Override
 	public void moveStoneToBottom() {
 		synchronized (activeStone) {
-			// TODO Auto-generated method stub
-			// get bottom position from collision detection
+			int x = activeStone.getX();
+			int y = activeStone.getY();
+			// --
+			for (int i = 1; i <= height; i++) {
+				activeStone.move(x, y + i);
+				if (checkCollision()) {
+					activeStone.move(x, y + (i - 1));
+					break;
+				}
+			}
+			// --
+			notifyStoneMoved(x, y);
+			// --
+			stoneToBlocks();
+			newStone();
 		}
 	}
-
 	// ---------------------------------------------------------------------------
 
 	@Override
@@ -215,10 +238,20 @@ public class GameFieldImpl implements GameField {
 
 	private void stoneToBlocks() {
 		for (Block b : activeStone.getBlocks()) {
-			gameField[activeStone.getY() + b.getY()][activeStone.getX() + b.getX()] = b;
+			blocks[activeStone.getY() + b.getY()][activeStone.getX() + b.getX()] = b;
 		}
 		// --
 		notifyBlocksChanged();
+		// --
+		int[] full = checkForFullRows();
+		// --
+		if (full.length > 0) {
+			System.out.println("full rows: " + full.length);
+			// --
+			for (int row : full) {
+				removeRow(row);
+			}
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -228,9 +261,63 @@ public class GameFieldImpl implements GameField {
 			int x = b.getX() + activeStone.getX();
 			int y = b.getY() + activeStone.getY();
 			// --
+			if (y == height) {
+				System.out.println("height");
+				return true;
+			}
+			if (x == width) {
+				System.out.println("width");
+				return true;
+			}
+			if (x == -1) {
+				System.out.println("x==-1");
+				return true;
+			}
+			// --
+			if (blocks[y][x] != null) {
+				return true;
+			}
 			// TODO
 		}
 		return false;
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private int[] checkForFullRows() {
+		ArrayList<Integer> tmpRows = new ArrayList<Integer>();
+		// --
+		for (int i = 0; i < height; i++) {
+			boolean full = true;
+			// --
+			for (int j = 0; j < width; j++) {
+				if (blocks[i][j] == null) {
+					full = false;
+					break;
+				}
+			}
+			// --
+			if (full) {
+				tmpRows.add(i);
+			}
+		}
+		// --
+		int[] result = new int[tmpRows.size()];
+		for (int i = 0; i < tmpRows.size(); i++) {
+			result[i] = tmpRows.get(i);
+		}
+		// --
+		return result;
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private void removeRow(int row) {
+		for (int i = row - 1; i >= 0; i--) {
+			for (int j = 0; j < width; j++) {
+				blocks[i + 1][j] = blocks[i][j];
+			}
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -252,7 +339,7 @@ public class GameFieldImpl implements GameField {
 	}
 	private void notifyBlocksChanged() {
 		for (GameFieldChangedListener l : fieldListeners) {
-			l.blocksChanged(gameField);
+			l.blocksChanged(blocks);
 		}
 	}
 

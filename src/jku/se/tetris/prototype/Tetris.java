@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -46,8 +48,12 @@ public class Tetris {
 		// --
 		gamefield.addFieldChangedListener(view);
 		gamefield.addDataChangedListener(view);
+		// --		
+		GraphicsProviderRegistry.setProvider(new SwingGraphicsAdaptor(BLOCK_SIZE));
 		// --
 		show();
+		// --
+		registerKeyBindings();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -58,8 +64,6 @@ public class Tetris {
 		frame.pack();
 		frame.setResizable(false);
 		frame.setVisible(true);
-		// --
-		GraphicsProviderRegistry.setProvider(new SwingGraphicsAdaptor(frame.getGraphics(), BLOCK_SIZE));
 	}
 
 	// ---------------------------------------------------------------------
@@ -110,8 +114,35 @@ public class Tetris {
 
 	// ---------------------------------------------------------------------------
 
-	private void startGame() {
-		// TODO;
+	private void registerKeyBindings() {
+		frame.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.isActionKey()) {
+					//@formatter:off
+					switch (e.getKeyCode()) {
+						case KeyEvent.VK_LEFT:	gamefield.moveStoneLeft();			break;
+						case KeyEvent.VK_RIGHT: gamefield.moveStoneRight();			break;
+						case KeyEvent.VK_UP: 	gamefield.rotateStoneClockwise();	break;
+						case KeyEvent.VK_DOWN: 	gamefield.moveStoneToBottom();		break;
+					}
+					//@formatter:on
+				}
+			}
+		});
 	}
 
 	// ---------------------------------------------------------------------------
@@ -121,7 +152,6 @@ public class Tetris {
 	 */
 	public static void main(String[] args) {
 		Tetris tetris = new Tetris();
-		tetris.startGame();
 	}
 
 }

@@ -11,12 +11,9 @@ import jku.se.tetris.model.Block;
 import jku.se.tetris.model.GraphicsAdaptor;
 
 public class SwingGraphicsAdaptor implements GraphicsAdaptor {
-
-	private Graphics graphics;
 	private int blocksize;
 
-	public SwingGraphicsAdaptor(Graphics graphicsContext, int blocksize) {
-		this.graphics = graphicsContext;
+	public SwingGraphicsAdaptor(int blocksize) {
 		this.blocksize = blocksize;
 	}
 

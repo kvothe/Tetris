@@ -30,6 +30,12 @@ public class SwingGameField extends JComponent implements GameFieldChangedListen
 
 	// ---------------------------------------------------------------------
 
+	private Stone stone;
+	private Block[][] blocks;
+	private boolean gameOver = false;
+
+	// ---------------------------------------------------------------------
+
 	public SwingGameField(int width, int height, int blocksize) {
 		this.width = width;
 		this.height = height;
@@ -83,6 +89,15 @@ public class SwingGameField extends JComponent implements GameFieldChangedListen
 			}
 		}
 		// --
+		if (gameOver) {
+			g.setColor(color);
+			g.fillRect(blocksize * 2, height / 2 - 2 * blocksize, width - 2 * blocksize, blocksize * 4);
+			g.setColor(border);
+			g.drawRect(blocksize * 2, height / 2 - 2 * blocksize, width - 2 * blocksize, blocksize * 4);
+			// --
+			g.drawString("GAME OVER", blocksize * 4, height / 2);
+		}
+		// --
 		repaint(g.getClipBounds());
 	}
 	// ---------------------------------------------------------------------
@@ -105,9 +120,6 @@ public class SwingGameField extends JComponent implements GameFieldChangedListen
 		repaint();
 	}
 
-	private Stone stone;
-	private Block[][] blocks;
-
 	@Override
 	public void blocksChanged(Block[][] blocks) {
 		this.blocks = blocks;
@@ -127,9 +139,14 @@ public class SwingGameField extends JComponent implements GameFieldChangedListen
 	}
 
 	@Override
-	public void gameOver() {
-		// TODO Auto-generated method stub
+	public void gameStarted() {
+		gameOver = false;
+	}
 
+	@Override
+	public void gameOver() {
+		gameOver = true;
+		repaint();
 	}
 
 }
