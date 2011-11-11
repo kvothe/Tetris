@@ -2,7 +2,7 @@ package jku.se.tetris.model;
 
 import java.awt.Color;
 
-public class Block implements Drawable {
+public class Block {
 	private int x;
 	private int y;
 
@@ -56,8 +56,11 @@ public class Block implements Drawable {
 
 	// ---------------------------------------------------------------------------
 
-	@Override
-	public void draw(int xOrigin, int yOrigin) {
-		GraphicsProviderRegistry.getProvider().drawBlock(xOrigin + getX(), yOrigin + getY(), getColor());
-	}
+	// @Override
+	// public void draw(int xOrigin, int yOrigin) {
+	// if (GraphicsProviderRegistry.hasProvider()) {
+	// GraphicsProviderRegistry.getProvider().drawBlock(xOrigin + getX(),
+	// yOrigin + getY(), getColor());
+	// }
+	// }
 }

@@ -1,8 +1,9 @@
 package jku.se.tetris.model;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 public interface GraphicsAdaptor {
-	public void drawBlock(int x, int y, Color color);
-	public void drawStone(int x, int y, Color color);
+	public void drawBlock(Graphics g, int x, int y, Color color);
+	public void drawStone(Graphics g, int x, int y, Block[] blocks);
 }

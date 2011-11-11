@@ -9,6 +9,7 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	private long score;
+	private int level;
 
 	// ---------------------------------------------------------------------------
 
@@ -21,7 +22,8 @@ public class GameFieldImpl implements GameField {
 
 	// ---------------------------------------------------------------------------
 
-	private ArrayList<GameFieldChangedListener> listeners;
+	private ArrayList<GameFieldChangedListener> fieldListeners;
+	private ArrayList<GameDataChangedListener> dataListeners;
 
 	// ---------------------------------------------------------------------------
 
@@ -30,10 +32,26 @@ public class GameFieldImpl implements GameField {
 		this.height = height;
 		// --
 		score = 0;
+		level = 1;
 		// --
 		gameField = new Block[height][width];
 		// --
-		listeners = new ArrayList<GameFieldChangedListener>();
+		fieldListeners = new ArrayList<GameFieldChangedListener>();
+		dataListeners = new ArrayList<GameDataChangedListener>();
+	}
+
+	// ---------------------------------------------------------------------------
+
+	@Override
+	public void newGame() {
+		score = 0;
+		level = 1;
+		// --
+		gameField = new Block[height][width];
+		// --
+		notifyScoreChanged();
+		notifyBlocksChanged();
+		newStone();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -41,17 +59,25 @@ public class GameFieldImpl implements GameField {
 	@Override
 	public void newStone() {
 		activeStone = new Stone();
-		activeStone.move((width / 2) + (activeStone.getWidth() / 2), 0);
+		// --
+		activeStone.move((width / 2) + (activeStone.getWidth() > 1 ? -1 : 0), 0);
+		// --
 		notifyStoneAdded();
 		nextStone = new Stone();
 		notifyAnnounceNextStone();
 	}
-
 	// ---------------------------------------------------------------------------
 
 	@Override
 	public long getScore() {
 		return this.score;
+	}
+
+	// ---------------------------------------------------------------------------
+
+	@Override
+	public int getLevel() {
+		return this.level;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -79,23 +105,31 @@ public class GameFieldImpl implements GameField {
 
 	@Override
 	public void rotateStoneClockwise() {
-		this.activeStone.rotateClockwise();
+		synchronized (activeStone) {
+			this.activeStone.rotateClockwise();
+		}
 	}
 
 	@Override
 	public void rotateStoneCounterClockwise() {
-		this.activeStone.rotateCounterClockwise();
+		synchronized (activeStone) {
+			this.activeStone.rotateCounterClockwise();
+		}
 	}
 
 	// ---------------------------------------------------------------------------
 
 	@Override
 	public void moveStoneLeft() {
-		int x = activeStone.getX();
-		int y = activeStone.getY();
-		// --
-		if (x > 0) {
-			activeStone.move(x - 1, y);
+		synchronized (activeStone) {
+			int x = activeStone.getX();
+			int y = activeStone.getY();
+			// --
+			if (x > 0) {
+				activeStone.move(x - 1, y);
+			}
+			// --
+			notifyStoneMoved(x, y);
 		}
 	}
 
@@ -103,11 +137,35 @@ public class GameFieldImpl implements GameField {
 
 	@Override
 	public void moveStoneRight() {
-		int x = activeStone.getX();
-		int y = activeStone.getY();
-		// --
-		if (x < width - 1) {
-			activeStone.move(x + 1, y);
+		synchronized (activeStone) {
+			int x = activeStone.getX();
+			int y = activeStone.getY();
+			// --
+			if (x < width - 1) {
+				activeStone.move(x + 1, y);
+			}
+			// --
+			notifyStoneMoved(x, y);
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+
+	@Override
+	public void moveStoneDown() {
+		synchronized (activeStone) {
+			int x = activeStone.getX();
+			int y = activeStone.getY();
+			// --
+			// TODO check possible collision
+			if (y + activeStone.getHeight() < height - 1) {
+				activeStone.move(x, y + 1);
+			} else {
+				stoneToBlocks();
+				newStone();
+			}
+			// --
+			notifyStoneMoved(x, y);
 		}
 	}
 
@@ -115,25 +173,52 @@ public class GameFieldImpl implements GameField {
 
 	@Override
 	public void moveStoneToBottom() {
-		// TODO Auto-generated method stub
-		// get bottom position from collision detection
+		synchronized (activeStone) {
+			// TODO Auto-generated method stub
+			// get bottom position from collision detection
+		}
 	}
 
 	// ---------------------------------------------------------------------------
 
 	@Override
 	public void addFieldChangedListener(GameFieldChangedListener listener) {
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
+		if (!fieldListeners.contains(listener)) {
+			fieldListeners.add(listener);
 		}
 	}
 
 	@Override
 	public void removeFieldChangedListener(GameFieldChangedListener listener) {
-		if (listeners.contains(listener)) {
-			listeners.remove(listener);
+		if (fieldListeners.contains(listener)) {
+			fieldListeners.remove(listener);
 		}
 
+	}
+
+	@Override
+	public void addDataChangedListener(GameDataChangedListener listener) {
+		if (!dataListeners.contains(listener)) {
+			dataListeners.add(listener);
+		}
+	}
+
+	@Override
+	public void removeDataChangedListener(GameDataChangedListener listener) {
+		if (dataListeners.contains(listener)) {
+			dataListeners.remove(listener);
+		}
+
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private void stoneToBlocks() {
+		for (Block b : activeStone.getBlocks()) {
+			gameField[activeStone.getY() + b.getY()][activeStone.getX() + b.getX()] = b;
+		}
+		// --
+		notifyBlocksChanged();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -151,28 +236,41 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	private void notifyAnnounceNextStone() {
-		for (GameFieldChangedListener l : listeners) {
+		for (GameFieldChangedListener l : fieldListeners) {
 			l.announceNextStone(nextStone);
 		}
 	}
 	private void notifyStoneAdded() {
-		for (GameFieldChangedListener l : listeners) {
+		for (GameFieldChangedListener l : fieldListeners) {
 			l.newStone(activeStone);
 		}
 	}
-	private void notifyScoreChanged(int oldScore) {
-		for (GameFieldChangedListener l : listeners) {
-			l.scoreChanged(oldScore, score);
-		}
-	}
 	private void notifyStoneMoved(int xOld, int yOld) {
-		for (GameFieldChangedListener l : listeners) {
-			l.stoneMoved(activeStone.getX(), activeStone.getY(), xOld, yOld);
+		for (GameFieldChangedListener l : fieldListeners) {
+			l.stoneMoved(activeStone, xOld, yOld);
 		}
 	}
 	private void notifyBlocksChanged() {
-		for (GameFieldChangedListener l : listeners) {
+		for (GameFieldChangedListener l : fieldListeners) {
 			l.blocksChanged(gameField);
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private void notifyScoreChanged() {
+		for (GameDataChangedListener l : dataListeners) {
+			l.scoreChanged(score);
+		}
+	}
+	private void notifLevelChanged() {
+		for (GameDataChangedListener l : dataListeners) {
+			l.levelChanged(level);
+		}
+	}
+	private void notifyGameOver() {
+		for (GameDataChangedListener l : dataListeners) {
+			l.gameOver();
 		}
 	}
 }

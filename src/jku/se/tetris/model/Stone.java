@@ -2,7 +2,7 @@ package jku.se.tetris.model;
 
 import java.awt.Color;
 
-public class Stone implements Drawable {
+public class Stone {
 
 	// L-Shape
 	private static final Block[] SHAPE_L = new Block[] { new Block(0, 0, Color.RED), new Block(0, 1, Color.RED), new Block(0, 2, Color.RED), new Block(1, 2, Color.RED) };
@@ -24,7 +24,7 @@ public class Stone implements Drawable {
 	private static final Block[] SHAPE_Z_90 = new Block[] { new Block(0, 0, Color.RED), new Block(1, 0, Color.RED), new Block(1, 1, Color.RED), new Block(1, 2, Color.RED) };
 	// I-Shape
 	private static final Block[] SHAPE_I = new Block[] { new Block(0, 0, Color.RED), new Block(0, 1, Color.RED), new Block(0, 2, Color.RED), new Block(0, 3, Color.RED) };
-	private static final Block[] SHAPE_I_90 = new Block[] { new Block(0, 0, Color.RED), new Block(0, 1, Color.RED), new Block(0, 2, Color.RED), new Block(0, 3, Color.RED) };
+	private static final Block[] SHAPE_I_90 = new Block[] { new Block(0, 0, Color.RED), new Block(0, 1, Color.RED), new Block(0, 2, Color.RED), new Block(0, 3, Color.RED) };	
 	// T-Shape
 	private static final Block[] SHAPE_T = new Block[] { new Block(1, 0, Color.RED), new Block(0, 1, Color.RED), new Block(1, 1, Color.RED), new Block(2, 1, Color.RED) };
 	private static final Block[] SHAPE_T_90 = new Block[] { new Block(1, 0, Color.RED), new Block(0, 1, Color.RED), new Block(1, 1, Color.RED), new Block(2, 1, Color.RED) };
@@ -44,7 +44,7 @@ public class Stone implements Drawable {
 
 	Stone() {
 		EStoneShape shape;
-		int rnd = (int) (Math.random()) % 7;
+		int rnd = (int) (Math.random() * 10) % 7;
 		// --
 		//@formatter:off
 		switch (rnd) {
@@ -132,14 +132,14 @@ public class Stone implements Drawable {
 
 	// ---------------------------------------------------------------------------
 
-	public void move(int x, int y) {
+	public synchronized void move(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
 	// ---------------------------------------------------------------------------
 
-	public void rotateClockwise() {
+	public synchronized void rotateClockwise() {
 		orientation = (orientation += 90) % 360;
 		// --
 		rotate();
@@ -147,7 +147,7 @@ public class Stone implements Drawable {
 
 	// ---------------------------------------------------------------------------
 
-	public void rotateCounterClockwise() {
+	public synchronized void rotateCounterClockwise() {
 		orientation = (orientation -= 90) % 360;
 		// --
 		rotate();
@@ -188,10 +188,11 @@ public class Stone implements Drawable {
 
 	// ---------------------------------------------------------------------------
 
-	@Override
-	public void draw(int xOrigin, int yOrigin) {
-		for (Block b : getBlocks()) {
-			b.draw(getX(), getY());
-		}
-	}
+	// @Override
+	// public void draw(int xOrigin, int yOrigin) {
+	// if (GraphicsProviderRegistry.hasProvider()) {
+	// GraphicsProviderRegistry.getProvider().drawStone(xOrigin + getX(),
+	// yOrigin + getY(), blocks);
+	// }
+	// }
 }

@@ -3,6 +3,10 @@ package jku.se.tetris.model;
 public final class GraphicsProviderRegistry {
 	private static GraphicsAdaptor graphicsAdaptor;
 
+	public static boolean hasProvider() {
+		return graphicsAdaptor != null;
+	}
+
 	public static GraphicsAdaptor getProvider() {
 		return graphicsAdaptor;
 	}

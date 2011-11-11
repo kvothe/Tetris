@@ -11,10 +11,12 @@ import java.awt.Stroke;
 import javax.swing.JComponent;
 
 import jku.se.tetris.model.Block;
+import jku.se.tetris.model.GameDataChangedListener;
 import jku.se.tetris.model.GameFieldChangedListener;
+import jku.se.tetris.model.GraphicsProviderRegistry;
 import jku.se.tetris.model.Stone;
 
-public class SwingGameField extends JComponent implements GameFieldChangedListener {
+public class SwingGameField extends JComponent implements GameFieldChangedListener, GameDataChangedListener {
 	private static final long serialVersionUID = 7822821719800517942L;
 
 	// ---------------------------------------------------------------------
@@ -61,20 +63,34 @@ public class SwingGameField extends JComponent implements GameFieldChangedListen
 		g.drawRect(offset, offset, width * blocksize + offset * 2, height * blocksize + offset * 2);
 		g.drawRect(blocksize - 1, blocksize - 1, width * blocksize + 2, height * blocksize + 2);
 		// --
+		if (blocks != null) {
+			for (int row = 0; row < blocks.length; row++) {
+				for (int b = 0; b < blocks[row].length; b++) {
+					if (blocks[row][b] != null) {
+						int x = blocksize * (b + 1);
+						int y = blocksize * (row + 1);
+						Color color = blocks[row][b].getColor();
+						// --
+						GraphicsProviderRegistry.getProvider().drawBlock(g, x, y, color);
+					}
+				}
+			}
+		}
+		// --
+		if (stone != null) {
+			for (Block b : stone.getBlocks()) {
+				GraphicsProviderRegistry.getProvider().drawBlock(g, (stone.getX() + b.getX() + 1) * blocksize, (stone.getY() + b.getY() + 1) * blocksize, b.getColor());
+			}
+		}
+		// --
 		repaint(g.getClipBounds());
 	}
 	// ---------------------------------------------------------------------
 
 	@Override
-	public void scoreChanged(long oldScore, long newScore) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void newStone(Stone newStone) {
-		// TODO Auto-generated method stub
-
+	public void newStone(Stone stone) {
+		this.stone = stone;
+		repaint();
 	}
 
 	@Override
@@ -84,13 +100,34 @@ public class SwingGameField extends JComponent implements GameFieldChangedListen
 	}
 
 	@Override
-	public void stoneMoved(int x, int y, int xOld, int yOld) {
+	public void stoneMoved(Stone stone, int xOld, int yOld) {
+		this.stone = stone;
+		repaint();
+	}
+
+	private Stone stone;
+	private Block[][] blocks;
+
+	@Override
+	public void blocksChanged(Block[][] blocks) {
+		this.blocks = blocks;
+		repaint();
+	}
+
+	@Override
+	public void scoreChanged(long newScore) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void blocksChanged(Block[][] blocks) {
+	public void levelChanged(int newLevel) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void gameOver() {
 		// TODO Auto-generated method stub
 
 	}

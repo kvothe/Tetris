@@ -2,6 +2,8 @@ package jku.se.tetris.prototype;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -9,13 +11,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 
+import jku.se.tetris.control.Controller;
 import jku.se.tetris.model.GameField;
 import jku.se.tetris.model.GameFieldImpl;
+import jku.se.tetris.model.GraphicsProviderRegistry;
 import jku.se.tetris.ui.swing.SwingGameField;
+import jku.se.tetris.ui.swing.SwingGraphicsAdaptor;
 
 public class Tetris {
 	private static final int BLOCK_SIZE = 30;
-	private static final int GAME_FIELD_WIDTH = 10;
+	private static final int GAME_FIELD_WIDTH = 11;
 	private static final int GAME_FIELD_HEIGHT = 20;
 
 	// ---------------------------------------------------------------------------
@@ -26,6 +31,7 @@ public class Tetris {
 
 	private GameField gamefield;
 	private SwingGameField view;
+	private Controller controller;
 
 	// ---------------------------------------------------------------------------
 
@@ -36,8 +42,10 @@ public class Tetris {
 	public Tetris() {
 		gamefield = new GameFieldImpl(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT);
 		view = new SwingGameField(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT, BLOCK_SIZE);
+		controller = new Controller(gamefield);
 		// --
 		gamefield.addFieldChangedListener(view);
+		gamefield.addDataChangedListener(view);
 		// --
 		show();
 	}
@@ -48,7 +56,10 @@ public class Tetris {
 		frame = createFrame();
 		frame.setLocation(100, 100);
 		frame.pack();
+		frame.setResizable(false);
 		frame.setVisible(true);
+		// --
+		GraphicsProviderRegistry.setProvider(new SwingGraphicsAdaptor(frame.getGraphics(), BLOCK_SIZE));
 	}
 
 	// ---------------------------------------------------------------------
@@ -67,6 +78,9 @@ public class Tetris {
 		JMenu menuFile = new JMenu("File");
 		menuBar.add(menuFile);
 		// File -> Reset
+		JMenuItem itemStart = new JMenuItem("Start");
+		menuFile.add(itemStart);
+		// File -> Reset
 		JMenuItem itemReset = new JMenuItem("Reset");
 		menuFile.add(itemReset);
 		// File -> Exit
@@ -83,6 +97,13 @@ public class Tetris {
 		cp.setLayout(new BorderLayout());
 		cp.add(view, BorderLayout.CENTER);
 
+		// --
+		itemStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.start();
+			}
+		});
 		// --
 		return frame;
 	}
