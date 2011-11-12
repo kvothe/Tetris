@@ -50,8 +50,8 @@ public class MenuProvider {
 		JMenuItem itemResume = new JMenuItem("Resume");
 		menuGame.add(itemResume);
 		// Game -> Exit
-		JMenuItem itemExit = new JMenuItem("Exit");
-		menuGame.add(itemExit);
+		/*JMenuItem itemExit = new JMenuItem("Exit");
+		menuGame.add(itemExit);*/
 		//
 		// Statistics
 		//
@@ -83,13 +83,16 @@ public class MenuProvider {
 			}
 		});
 		// MenuItem: Game -> Exit
-		itemExit.addActionListener(new ActionListener() {
+		/*itemExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.stop();
 				frame.dispose();
 			}
 		});
+		nicht compatibel mit multiframes ...
+		
+		*/
 
 		// MenuItem: Statistics -> Show Highscore
 		itemHighscore.addActionListener(new ActionListener() {
