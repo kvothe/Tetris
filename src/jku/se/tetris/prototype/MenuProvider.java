@@ -16,13 +16,15 @@ public class MenuProvider {
 	private JFrame frame;
 	private GameField gamefield;
 	private Controller controller;
+	private StatisticsProvider statistics;
 
 	// ---------------------------------------------------------------------
 
-	public MenuProvider(JFrame frame, GameField gamefield, Controller controller) {
+	public MenuProvider(JFrame frame, GameField gamefield, Controller controller, StatisticsProvider statistics) {
 		this.frame = frame;
 		this.gamefield = gamefield;
 		this.controller = controller;
+		this.statistics = statistics;
 		// --
 		populateMenuBar();
 	}
@@ -50,9 +52,14 @@ public class MenuProvider {
 		// Game -> Exit
 		JMenuItem itemExit = new JMenuItem("Exit");
 		menuGame.add(itemExit);
-		// Edit
-		JMenu menuEdit = new JMenu("Edit");
-		menuBar.add(menuEdit);
+		//
+		// Statistics
+		//
+		JMenu menuStatistics = new JMenu("Statistics");
+		menuBar.add(menuStatistics);
+		// Statistics -> Show Highscore
+		JMenuItem itemHighscore = new JMenuItem("Show Highscore...");
+		menuStatistics.add(itemHighscore);
 
 		// MenuItem: Game -> Start
 		itemStart.addActionListener(new ActionListener() {
@@ -81,6 +88,14 @@ public class MenuProvider {
 			public void actionPerformed(ActionEvent e) {
 				controller.stop();
 				frame.dispose();
+			}
+		});
+
+		// MenuItem: Statistics -> Show Highscore
+		itemHighscore.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				statistics.showScoreListDialog();
 			}
 		});
 	}

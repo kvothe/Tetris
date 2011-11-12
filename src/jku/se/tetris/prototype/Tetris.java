@@ -42,7 +42,7 @@ public class Tetris implements GameDataChangedListener {
 	private GameField gamefield;
 	private JGameField view;
 	private Controller controller;
-
+	private StatisticsProvider statistics;
 	// ---------------------------------------------------------------------------
 
 	private JFrame frame;
@@ -58,6 +58,12 @@ public class Tetris implements GameDataChangedListener {
 		gamefield.addDataChangedListener(view);
 		gamefield.addDataChangedListener(this);
 		// --
+		statistics = new StatisticsProvider(gamefield);
+		// --
+		frame = createFrame();
+		// --
+		statistics.setGui(frame);
+		// --
 		GraphicsProviderRegistry.setProvider(new SwingGraphicsAdaptor(BLOCK_SIZE));
 		// --
 		show();
@@ -66,7 +72,6 @@ public class Tetris implements GameDataChangedListener {
 	// ---------------------------------------------------------------------------
 
 	public void show() {
-		frame = createFrame();
 		frame.setLocation(100, 100);
 		frame.pack();
 		frame.setResizable(false);
@@ -83,7 +88,7 @@ public class Tetris implements GameDataChangedListener {
 		//
 		// Menu Bar
 		//
-		new MenuProvider(frame, gamefield, controller);
+		new MenuProvider(frame, gamefield, controller, statistics);
 
 		//
 		// Playing field
