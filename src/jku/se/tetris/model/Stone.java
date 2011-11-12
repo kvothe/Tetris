@@ -4,32 +4,40 @@ import java.awt.Color;
 
 public class Stone {
 
+	private static final Color CYAN = new Color(0, 240, 240);
+	private static final Color BLUE = new Color(0, 0, 240);
+	private static final Color ORANGE = new Color(240, 160, 0);
+	private static final Color YELLOW = new Color(240, 240, 0);
+	private static final Color GREEN = new Color(0, 240, 0);
+	private static final Color PURPLE = new Color(160, 0, 240);
+	private static final Color RED = new Color(240, 0, 0);
+
 	// L-Shape
-	private static final Block[] SHAPE_L = new Block[] { new Block(0, 0, Color.ORANGE), new Block(0, 1, Color.ORANGE), new Block(0, 2, Color.ORANGE), new Block(1, 2, Color.ORANGE) };
-	private static final Block[] SHAPE_L_90 = new Block[] { new Block(0, 0, Color.ORANGE), new Block(1, 0, Color.ORANGE), new Block(2, 0, Color.ORANGE), new Block(0, 1, Color.ORANGE) };
-	private static final Block[] SHAPE_L_180 = new Block[] { new Block(0, 0, Color.ORANGE), new Block(1, 0, Color.ORANGE), new Block(1, 1, Color.ORANGE), new Block(1, 2, Color.ORANGE) };
-	private static final Block[] SHAPE_L_270 = new Block[] { new Block(0, 1, Color.ORANGE), new Block(1, 1, Color.ORANGE), new Block(2, 1, Color.ORANGE), new Block(2, 0, Color.ORANGE) };
+	private static final Block[] SHAPE_L = new Block[] { new Block(0, 0, ORANGE), new Block(0, 1, ORANGE), new Block(0, 2, ORANGE), new Block(1, 2, ORANGE) };
+	private static final Block[] SHAPE_L_90 = new Block[] { new Block(0, 0, ORANGE), new Block(1, 0, ORANGE), new Block(2, 0, ORANGE), new Block(0, 1, ORANGE) };
+	private static final Block[] SHAPE_L_180 = new Block[] { new Block(0, 0, ORANGE), new Block(1, 0, ORANGE), new Block(1, 1, ORANGE), new Block(1, 2, ORANGE) };
+	private static final Block[] SHAPE_L_270 = new Block[] { new Block(0, 1, ORANGE), new Block(1, 1, ORANGE), new Block(2, 1, ORANGE), new Block(2, 0, ORANGE) };
 	// J-Shape
-	private static final Block[] SHAPE_J = new Block[] { new Block(1, 0, Color.BLUE), new Block(1, 1, Color.BLUE), new Block(1, 2, Color.BLUE), new Block(0, 2, Color.BLUE) };
-	private static final Block[] SHAPE_J_90 = new Block[] { new Block(0, 0, Color.BLUE), new Block(0, 1, Color.BLUE), new Block(1, 1, Color.BLUE), new Block(2, 1, Color.BLUE) };
-	private static final Block[] SHAPE_J_180 = new Block[] { new Block(0, 0, Color.BLUE), new Block(1, 0, Color.BLUE), new Block(0, 1, Color.BLUE), new Block(0, 2, Color.BLUE) };
-	private static final Block[] SHAPE_J_270 = new Block[] { new Block(0, 0, Color.BLUE), new Block(1, 0, Color.BLUE), new Block(2, 0, Color.BLUE), new Block(2, 1, Color.BLUE) };
+	private static final Block[] SHAPE_J = new Block[] { new Block(1, 0, BLUE), new Block(1, 1, BLUE), new Block(1, 2, BLUE), new Block(0, 2, BLUE) };
+	private static final Block[] SHAPE_J_90 = new Block[] { new Block(0, 0, BLUE), new Block(0, 1, BLUE), new Block(1, 1, BLUE), new Block(2, 1, BLUE) };
+	private static final Block[] SHAPE_J_180 = new Block[] { new Block(0, 0, BLUE), new Block(1, 0, BLUE), new Block(0, 1, BLUE), new Block(0, 2, BLUE) };
+	private static final Block[] SHAPE_J_270 = new Block[] { new Block(0, 0, BLUE), new Block(1, 0, BLUE), new Block(2, 0, BLUE), new Block(2, 1, BLUE) };
 	// O-Shape
-	private static final Block[] SHAPE_O = new Block[] { new Block(0, 0, Color.YELLOW), new Block(0, 1, Color.YELLOW), new Block(1, 0, Color.YELLOW), new Block(1, 1, Color.YELLOW) };
+	private static final Block[] SHAPE_O = new Block[] { new Block(0, 0, YELLOW), new Block(0, 1, YELLOW), new Block(1, 0, YELLOW), new Block(1, 1, YELLOW) };
 	// S-Shape
-	private static final Block[] SHAPE_S = new Block[] { new Block(1, 0, Color.GREEN), new Block(2, 0, Color.GREEN), new Block(0, 1, Color.GREEN), new Block(1, 1, Color.GREEN) };
-	private static final Block[] SHAPE_S_90 = new Block[] { new Block(0, 0, Color.GREEN), new Block(0, 1, Color.GREEN), new Block(1, 1, Color.GREEN), new Block(1, 2, Color.GREEN) };
+	private static final Block[] SHAPE_S = new Block[] { new Block(1, 0, GREEN), new Block(2, 0, GREEN), new Block(0, 1, GREEN), new Block(1, 1, GREEN) };
+	private static final Block[] SHAPE_S_90 = new Block[] { new Block(0, 0, GREEN), new Block(0, 1, GREEN), new Block(1, 1, GREEN), new Block(1, 2, GREEN) };
 	// Z-Shape
-	private static final Block[] SHAPE_Z = new Block[] { new Block(0, 0, Color.RED), new Block(1, 0, Color.RED), new Block(1, 1, Color.RED), new Block(2, 1, Color.RED) };
-	private static final Block[] SHAPE_Z_90 = new Block[] { new Block(1, 0, Color.RED), new Block(0, 1, Color.RED), new Block(1, 1, Color.RED), new Block(0, 2, Color.RED) };
+	private static final Block[] SHAPE_Z = new Block[] { new Block(0, 0, RED), new Block(1, 0, RED), new Block(1, 1, RED), new Block(2, 1, RED) };
+	private static final Block[] SHAPE_Z_90 = new Block[] { new Block(1, 0, RED), new Block(0, 1, RED), new Block(1, 1, RED), new Block(0, 2, RED) };
 	// I-Shape
-	private static final Block[] SHAPE_I = new Block[] { new Block(0, 0, Color.CYAN), new Block(1, 0, Color.CYAN), new Block(2, 0, Color.CYAN), new Block(3, 0, Color.CYAN) };
-	private static final Block[] SHAPE_I_90 = new Block[] { new Block(1, 0, Color.CYAN), new Block(1, 1, Color.CYAN), new Block(1, 2, Color.CYAN), new Block(1, 3, Color.CYAN) };
+	private static final Block[] SHAPE_I = new Block[] { new Block(0, 0, CYAN), new Block(1, 0, CYAN), new Block(2, 0, CYAN), new Block(3, 0, CYAN) };
+	private static final Block[] SHAPE_I_90 = new Block[] { new Block(1, 0, CYAN), new Block(1, 1, CYAN), new Block(1, 2, CYAN), new Block(1, 3, CYAN) };
 	// T-Shape
-	private static final Block[] SHAPE_T = new Block[] { new Block(1, 0, Color.PINK), new Block(0, 1, Color.PINK), new Block(1, 1, Color.PINK), new Block(2, 1, Color.PINK) };
-	private static final Block[] SHAPE_T_90 = new Block[] { new Block(1, 0, Color.PINK), new Block(1, 1, Color.PINK), new Block(1, 2, Color.PINK), new Block(2, 1, Color.PINK) };
-	private static final Block[] SHAPE_T_180 = new Block[] { new Block(0, 1, Color.PINK), new Block(1, 1, Color.PINK), new Block(2, 1, Color.PINK), new Block(1, 2, Color.PINK) };
-	private static final Block[] SHAPE_T_270 = new Block[] { new Block(1, 0, Color.PINK), new Block(0, 1, Color.PINK), new Block(1, 1, Color.PINK), new Block(1, 2, Color.PINK) };
+	private static final Block[] SHAPE_T = new Block[] { new Block(1, 0, PURPLE), new Block(0, 1, PURPLE), new Block(1, 1, PURPLE), new Block(2, 1, PURPLE) };
+	private static final Block[] SHAPE_T_90 = new Block[] { new Block(1, 0, PURPLE), new Block(1, 1, PURPLE), new Block(1, 2, PURPLE), new Block(2, 1, PURPLE) };
+	private static final Block[] SHAPE_T_180 = new Block[] { new Block(0, 1, PURPLE), new Block(1, 1, PURPLE), new Block(2, 1, PURPLE), new Block(1, 2, PURPLE) };
+	private static final Block[] SHAPE_T_270 = new Block[] { new Block(1, 0, PURPLE), new Block(0, 1, PURPLE), new Block(1, 1, PURPLE), new Block(1, 2, PURPLE) };
 
 	// ---------------------------------------------------------------------------
 
@@ -151,7 +159,7 @@ public class Stone {
 
 	// ---------------------------------------------------------------------------
 
-	private void rotate() {		
+	private void rotate() {
 		//@formatter:off
 		switch (shape) {
 			case I_SHAPE:	if (orientation == 90 || orientation == 270) blocks = SHAPE_I_90; 
