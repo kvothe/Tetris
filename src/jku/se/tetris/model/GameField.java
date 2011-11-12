@@ -8,6 +8,7 @@ public interface GameField {
 
 	public long getScore();
 	public int getLevel();
+	public long getGameDuration();
 
 	public Stone getCurrentStone();
 	public Stone getNextStone();

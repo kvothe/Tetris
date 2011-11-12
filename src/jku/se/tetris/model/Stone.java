@@ -115,7 +115,7 @@ public class Stone {
 			width = Math.max(width, b.getX());
 		}
 		// --
-		return width;
+		return width + 1;
 	}
 
 	public int getHeight() {
@@ -125,7 +125,7 @@ public class Stone {
 			height = Math.max(height, b.getY());
 		}
 		// --
-		return height;
+		return height + 1;
 	}
 
 	// ---------------------------------------------------------------------------

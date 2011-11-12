@@ -3,15 +3,10 @@ package jku.se.tetris.prototype;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 
 import jku.se.tetris.control.Controller;
@@ -88,26 +83,7 @@ public class Tetris implements GameDataChangedListener {
 		//
 		// Menu Bar
 		//
-		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
-		// Game
-		JMenu menuGame = new JMenu("Game");
-		menuBar.add(menuGame);
-		// Game -> Reset
-		JMenuItem itemStart = new JMenuItem("Start");
-		menuGame.add(itemStart);
-		// Game -> Reset
-		JMenuItem itemPause = new JMenuItem("Pause");
-		menuGame.add(itemPause);
-		// Game -> Reset
-		JMenuItem itemResume = new JMenuItem("Resume");
-		menuGame.add(itemResume);
-		// Game -> Exit
-		JMenuItem itemExit = new JMenuItem("Exit");
-		menuGame.add(itemExit);
-		// Edit
-		JMenu menuEdit = new JMenu("Edit");
-		menuBar.add(menuEdit);
+		new MenuProvider(frame, gamefield, controller);
 
 		//
 		// Playing field
@@ -146,35 +122,6 @@ public class Tetris implements GameDataChangedListener {
 		// --
 		cp.add(hud, BorderLayout.EAST);
 
-		// MenuItem: Game -> Start
-		itemStart.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.start();
-			}
-		});
-		// MenuItem: Game -> Pause
-		itemPause.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.pause();
-			}
-		});
-		// MenuItem: Game -> Pause
-		itemResume.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.resume();
-			}
-		});
-		// MenuItem: Game -> Exit
-		itemExit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.stop();
-				frame.dispose();
-			}
-		});
 		// --
 		return frame;
 	}

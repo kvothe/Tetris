@@ -111,7 +111,10 @@ public class GameFieldImpl implements GameField {
 			nextStone = new Stone();
 		}
 		// --
-		activeStone.move((width / 2) + (activeStone.getWidth() > 1 ? -1 : 0), 0);
+		int offset = activeStone.getWidth() > 1 ? -1 : 0;
+		offset = activeStone.getWidth() > 3 ? -2 : offset;
+		// --
+		activeStone.move((width / 2) + offset, 0);
 		// --
 		if (checkCollision()) {
 			gameState = EGameState.GAMEOVER;
@@ -137,6 +140,13 @@ public class GameFieldImpl implements GameField {
 	@Override
 	public int getLevel() {
 		return this.level;
+	}
+
+	// ---------------------------------------------------------------------------
+
+	@Override
+	public long getGameDuration() {
+		return gameDuration;
 	}
 
 	// ---------------------------------------------------------------------------

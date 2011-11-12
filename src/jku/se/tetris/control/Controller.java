@@ -9,7 +9,7 @@ public class Controller implements GameDataChangedListener {
 
 	private GameField gamefield;
 	private long speed;
-	
+
 	// ---------------------------------------------------------------------------
 
 	private Thread animator;
@@ -19,7 +19,7 @@ public class Controller implements GameDataChangedListener {
 
 	public Controller(GameField gamefield) {
 		this.gamefield = gamefield;
-		this.speed = START_SPEED;		
+		this.speed = START_SPEED;
 		// --
 		this.gamefield.addDataChangedListener(this);
 	}
@@ -45,12 +45,11 @@ public class Controller implements GameDataChangedListener {
 				} catch (InterruptedException e) {
 					// ignore
 				} catch (InvalidActionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					// ignore
 				}
 			}
 
-		}, "Tetris Animator");		
+		}, "Tetris Animator");
 		// --
 		animator.start();
 	}
@@ -74,7 +73,7 @@ public class Controller implements GameDataChangedListener {
 			animator.interrupt();
 		}
 	}
-	
+
 	// ---------------------------------------------------------------------------
 
 	@Override
@@ -87,8 +86,6 @@ public class Controller implements GameDataChangedListener {
 	@Override
 	public void levelChanged(int newLevel) {
 		speed = START_SPEED - (long) ((Math.log(newLevel) / Math.log(2) + 1) * 100);
-		// --
-		System.out.println("Speed: " + speed);
 	}
 
 	// ---------------------------------------------------------------------------
