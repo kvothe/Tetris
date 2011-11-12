@@ -95,7 +95,12 @@ public class GameFieldImpl implements GameField {
 	public void newStone() throws InvalidActionException {
 		checkState();
 		// --
-		activeStone = new Stone();
+		if (nextStone != null) {
+			activeStone = nextStone;
+			nextStone = new Stone();
+		} else {
+			activeStone = new Stone();
+		}
 		// --
 		activeStone.move((width / 2) + (activeStone.getWidth() > 1 ? -1 : 0), 0);
 		// --
@@ -106,8 +111,7 @@ public class GameFieldImpl implements GameField {
 		}
 		// --
 		notifyStoneAdded();
-		// --
-		nextStone = new Stone();
+		// --		
 		notifyAnnounceNextStone();
 	}
 	// ---------------------------------------------------------------------------
