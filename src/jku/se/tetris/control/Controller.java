@@ -5,7 +5,7 @@ import jku.se.tetris.model.GameField;
 import jku.se.tetris.model.exception.InvalidActionException;
 
 public class Controller implements GameDataChangedListener {
-	private static final long START_SPEED = 900;
+	private static long START_SPEED = 800;
 
 	private GameField gamefield;
 	private long speed;
@@ -18,6 +18,11 @@ public class Controller implements GameDataChangedListener {
 	// ---------------------------------------------------------------------------
 
 	public Controller(GameField gamefield) {
+		// --
+		if (System.getProperty("jku.se.tetris.speed") != null) {
+			START_SPEED = Long.parseLong(System.getProperty("jku.se.tetris.speed"));
+		}
+		// --
 		this.gamefield = gamefield;
 		this.speed = START_SPEED;
 		// --

@@ -137,14 +137,10 @@ public class Tetris implements GameDataChangedListener {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
@@ -152,13 +148,13 @@ public class Tetris implements GameDataChangedListener {
 			if (e.isActionKey()) {
 				try {
 					//@formatter:off
-			switch (e.getKeyCode()) {
-				case KeyEvent.VK_LEFT:	gamefield.moveStoneLeft();			break;
-				case KeyEvent.VK_RIGHT: gamefield.moveStoneRight();			break;
-				case KeyEvent.VK_UP: 	gamefield.rotateStoneClockwise();	break;
-				case KeyEvent.VK_DOWN: 	gamefield.moveStoneToBottom();		break;
-			}
-			//@formatter:on
+					switch (e.getKeyCode()) {
+						case KeyEvent.VK_LEFT:	gamefield.moveStoneLeft();			break;
+						case KeyEvent.VK_RIGHT: gamefield.moveStoneRight();			break;
+						case KeyEvent.VK_UP: 	gamefield.rotateStoneClockwise();	break;
+						case KeyEvent.VK_DOWN: 	gamefield.moveStoneToBottom();		break;
+					}
+					//@formatter:on
 				} catch (InvalidActionException exc) {
 					exc.printStackTrace(); // TODO improve handling
 				}

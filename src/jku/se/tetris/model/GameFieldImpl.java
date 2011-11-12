@@ -6,7 +6,7 @@ import jku.se.tetris.model.exception.InvalidActionException;
 
 public class GameFieldImpl implements GameField {
 	public static final int MAX_LEVEL = 100;
-	public static final int LEVEL_THRESHOLD = 10000;
+	public static int LEVEL_THRESHOLD = 10000;
 
 	// ---------------------------------------------------------------------------
 
@@ -60,6 +60,10 @@ public class GameFieldImpl implements GameField {
 		dataListeners = new ArrayList<GameDataChangedListener>();
 		// --
 		gameState = EGameState.INITIALIZED;
+		// --
+		if (System.getProperty("jku.se.tetris.threshold") != null) {
+			LEVEL_THRESHOLD = Integer.parseInt(System.getProperty("jku.se.tetris.threshold"));
+		}
 	}
 
 	// ---------------------------------------------------------------------------
