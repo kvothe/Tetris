@@ -42,6 +42,11 @@ public class GameFieldImpl implements GameField {
 
 	// ---------------------------------------------------------------------------
 
+	private long gameStart = 0;
+	private long gameDuration = 0;
+
+	// ---------------------------------------------------------------------------
+
 	public GameFieldImpl(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -67,6 +72,9 @@ public class GameFieldImpl implements GameField {
 		blocks = new Block[height][width];
 		// --
 		gameState = EGameState.PLAYING;
+		// --
+		gameStart = System.currentTimeMillis();
+		gameDuration = 0;
 		// --
 		notifyGameStarted();
 		// --
@@ -107,6 +115,7 @@ public class GameFieldImpl implements GameField {
 		// --
 		if (checkCollision()) {
 			gameState = EGameState.GAMEOVER;
+			gameDuration = System.currentTimeMillis() - gameStart;
 			notifyGameOver();
 			return;
 		}
@@ -462,7 +471,7 @@ public class GameFieldImpl implements GameField {
 	}
 	private void notifyGameOver() {
 		for (GameDataChangedListener l : dataListeners) {
-			l.gameOver();
+			l.gameOver(score, level, gameDuration);
 		}
 	}
 }

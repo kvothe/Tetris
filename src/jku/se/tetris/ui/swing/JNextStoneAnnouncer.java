@@ -13,6 +13,9 @@ import jku.se.tetris.model.GraphicsProviderRegistry;
 import jku.se.tetris.model.Stone;
 
 public class JNextStoneAnnouncer extends JComponent implements GameFieldChangedListener, GameDataChangedListener {
+	private static final long serialVersionUID = 7422689163766554747L;
+
+	// ---------------------------------------------------------------------
 
 	private int width;
 	private int height;
@@ -86,24 +89,18 @@ public class JNextStoneAnnouncer extends JComponent implements GameFieldChangedL
 
 	@Override
 	public void scoreChanged(long newScore) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void levelChanged(int newLevel) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void gameStarted() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void gameOver() {
+	public void gameOver(long score, int level, long duration) {
 		nextStone = null;
 		repaint();
 	}

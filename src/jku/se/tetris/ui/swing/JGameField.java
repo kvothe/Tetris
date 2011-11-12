@@ -1,12 +1,9 @@
 package jku.se.tetris.ui.swing;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
 
 import javax.swing.JComponent;
 
@@ -57,12 +54,7 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		// Prettify if possible
-		if (g instanceof Graphics2D) {
-			Stroke stroke = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
-			// --
-			((Graphics2D) g).setStroke(stroke);
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		}
+		SwingGraphicsAdaptor.configureGraphicsContext(g);
 		// --
 		g.setColor(backgroundColor);
 		g.fillRect(0, 0, (width + 2) * blocksize, (height + 2) * blocksize);
@@ -92,15 +84,17 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 		// --
 		if (gameOver) {
 			g.setColor(backgroundColor);
-			g.fillRect(blocksize * 2, height / 2 - 2 * blocksize, width - 2 * blocksize, blocksize * 4);
+			g.fillRect(blocksize * 2, height * blocksize / 2, width * blocksize - 2 * blocksize, blocksize * 3);
 			g.setColor(borderColor);
-			g.drawRect(blocksize * 2, height / 2 - 2 * blocksize, width - 2 * blocksize, blocksize * 4);
+			g.drawRect(blocksize * 2, height * blocksize / 2, width * blocksize - 2 * blocksize, blocksize * 3);
 			// --
-			g.drawString("GAME OVER", blocksize * 4, height / 2);
+			SwingGraphicsAdaptor.setFontStyle(g, Font.BOLD, 36);
+			SwingGraphicsAdaptor.drawStringCenter(g, "GAME OVER", 10);
 		}
 		// --
 		repaint(g.getClipBounds());
 	}
+
 	// ---------------------------------------------------------------------
 
 	@Override
@@ -111,7 +105,6 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 
 	@Override
 	public void announceNextStone(Stone nextStone) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -129,14 +122,10 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 
 	@Override
 	public void scoreChanged(long newScore) {
-		// TODO Auto-generated method stub
-		System.out.println("Score: " + newScore);
 	}
 
 	@Override
 	public void levelChanged(int newLevel) {
-		// TODO Auto-generated method stub
-		System.out.println("Level: " + newLevel);
 	}
 
 	@Override
@@ -145,7 +134,7 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 	}
 
 	@Override
-	public void gameOver() {
+	public void gameOver(long score, int level, long duration) {
 		gameOver = true;
 		repaint();
 	}

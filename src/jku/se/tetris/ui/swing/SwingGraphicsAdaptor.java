@@ -2,6 +2,8 @@ package jku.se.tetris.ui.swing;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -58,5 +60,23 @@ public class SwingGraphicsAdaptor implements GraphicsAdaptor {
 			((Graphics2D) g).setStroke(stroke);
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	public static void drawStringCenter(Graphics g, String string, int yOffset) {
+		FontMetrics fm = g.getFontMetrics();
+		int ascent = fm.getAscent();
+		// --
+		int strWidth = fm.stringWidth(string);
+		// --
+		g.drawString(string, (g.getClipBounds().width - strWidth) / 2, (g.getClipBounds().height + yOffset + ascent) / 2);
+	}
+
+	// ---------------------------------------------------------------------
+
+	public static void setFontStyle(Graphics g, int style, int size) {
+		Font f = g.getFont();
+		g.setFont(f.deriveFont(style, size));
 	}
 }

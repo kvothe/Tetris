@@ -3,20 +3,17 @@ package jku.se.tetris.ui.swing;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JComponent;
 
 import jku.se.tetris.model.GameDataChangedListener;
 
-public class JScoreBoard extends JComponent implements GameDataChangedListener {
+public class JStopwatch extends JComponent implements GameDataChangedListener {
 	private static final long serialVersionUID = -5112749912250732996L;
-
-	// ---------------------------------------------------------------------
-
-	private long score;
-	private int level;
 
 	// ---------------------------------------------------------------------
 
@@ -32,7 +29,12 @@ public class JScoreBoard extends JComponent implements GameDataChangedListener {
 
 	// ---------------------------------------------------------------------
 
-	public JScoreBoard(int width, int height, int borderInset, Color bg, Color fg, Color txt) {
+	private long gameStarted = 0;
+	private long gameOver = -1;
+
+	// ---------------------------------------------------------------------
+
+	public JStopwatch(int width, int height, int borderInset, Color bg, Color fg, Color txt) {
 		this.width = width;
 		this.height = height;
 		this.borderInset = borderInset;
@@ -42,6 +44,14 @@ public class JScoreBoard extends JComponent implements GameDataChangedListener {
 		colorText = txt;
 		// --
 		setPreferredSize(new Dimension(width, height));
+		// --
+		Timer t = new Timer("Stopwatch");
+		t.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				repaint();
+			}
+		}, 0, 50);
 	}
 
 	// ---------------------------------------------------------------------
@@ -57,51 +67,61 @@ public class JScoreBoard extends JComponent implements GameDataChangedListener {
 		// --
 		g.setColor(colorText);
 		// --
-		SwingGraphicsAdaptor.setFontStyle(g, Font.BOLD, 18);
-		drawStringCenter(g, "Score: " + score, 20);
+		setFontStyle(g, Font.BOLD, 18);
 		// --
-		SwingGraphicsAdaptor.setFontStyle(g, Font.BOLD, 18);
-		drawStringCenter(g, "Level: " + level, 45);
+		SwingGraphicsAdaptor.drawStringCenter(g, formatTime(), -5);
 	}
 
 	// ---------------------------------------------------------------------
 
-	private void drawStringCenter(Graphics g, String string, int yOffset) {
-		FontMetrics fm = g.getFontMetrics();
-		int ascent = fm.getAscent();
+	private String formatTime() {
+		long duration = 0;
+		if (gameStarted > 0) {
+			if (gameOver == -1) {
+				duration = System.currentTimeMillis() - gameStarted;
+			} else {
+				duration = gameOver - gameStarted;
+			}
+		}
 		// --
-		int strWidth = fm.stringWidth(string);
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(duration);
 		// --
-		g.drawString(string, (width - strWidth) / 2, yOffset + ascent);
+		int h = c.get(Calendar.HOUR_OF_DAY) - 1;
+		int m = c.get(Calendar.MINUTE);
+		int s = c.get(Calendar.SECOND);
+		// --
+		return String.format("%02d:%02d:%02d", h, m, s);
+	}
+
+	// ---------------------------------------------------------------------
+
+	private void setFontStyle(Graphics g, int style, int size) {
+		Font f = g.getFont();
+		g.setFont(f.deriveFont(style, size));
 	}
 
 	// ---------------------------------------------------------------------
 
 	@Override
 	public void scoreChanged(long newScore) {
-		this.score = newScore;
-		repaint();
 	}
 
 	@Override
 	public void levelChanged(int newLevel) {
-		this.level = newLevel;
-		repaint();
 	}
 
 	// ---------------------------------------------------------------------
 
 	@Override
 	public void gameStarted() {
-		this.score = 0;
-		this.level = 1;
-		// --
+		this.gameStarted = System.currentTimeMillis();
 		repaint();
 	}
 
 	@Override
 	public void gameOver(long score, int level, long duration) {
-		// TODO bold
+		gameOver = System.currentTimeMillis();
+		repaint();
 	}
-
 }

@@ -23,6 +23,7 @@ import jku.se.tetris.model.exception.InvalidActionException;
 import jku.se.tetris.ui.swing.JGameField;
 import jku.se.tetris.ui.swing.JNextStoneAnnouncer;
 import jku.se.tetris.ui.swing.JScoreBoard;
+import jku.se.tetris.ui.swing.JStopwatch;
 import jku.se.tetris.ui.swing.SwingGraphicsAdaptor;
 
 public class Tetris implements GameDataChangedListener {
@@ -131,9 +132,17 @@ public class Tetris implements GameDataChangedListener {
 		//
 		// Scoreboard
 		//
-		JScoreBoard scoreboard = new JScoreBoard((int)announcer.getPreferredSize().getWidth(), 90, BLOCK_SIZE / 2, BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
+		JScoreBoard scoreboard = new JScoreBoard((int) announcer.getPreferredSize().getWidth(), 90, BLOCK_SIZE / 2, BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
 		gamefield.addDataChangedListener(scoreboard);
 		hud.add(scoreboard, BorderLayout.CENTER);
+
+		//
+		// Stopwatch
+		//
+		JStopwatch stopwatch = new JStopwatch((int) announcer.getPreferredSize().getWidth(), 60, BLOCK_SIZE / 2, BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
+		gamefield.addDataChangedListener(stopwatch);
+		hud.add(stopwatch, BorderLayout.SOUTH);
+
 		// --
 		cp.add(hud, BorderLayout.EAST);
 
@@ -209,11 +218,12 @@ public class Tetris implements GameDataChangedListener {
 
 	@Override
 	public void gameStarted() {
+		frame.removeKeyListener(keyListener);
 		frame.addKeyListener(keyListener);
 	}
 
 	@Override
-	public void gameOver() {
+	public void gameOver(long score, int level, long duration) {
 		frame.removeKeyListener(keyListener);
 	}
 

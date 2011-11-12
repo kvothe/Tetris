@@ -9,12 +9,7 @@ public class Controller implements GameDataChangedListener {
 
 	private GameField gamefield;
 	private long speed;
-
-	// ---------------------------------------------------------------------------
-
-	private long gameStart;
-	private long gameDuration;
-
+	
 	// ---------------------------------------------------------------------------
 
 	private Thread animator;
@@ -24,10 +19,7 @@ public class Controller implements GameDataChangedListener {
 
 	public Controller(GameField gamefield) {
 		this.gamefield = gamefield;
-		this.speed = START_SPEED;
-		// --
-		this.gameStart = -1;
-		this.gameDuration = -1;
+		this.speed = START_SPEED;		
 		// --
 		this.gamefield.addDataChangedListener(this);
 	}
@@ -56,13 +48,9 @@ public class Controller implements GameDataChangedListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				// --
-				gameDuration = System.currentTimeMillis() - gameStart;
 			}
 
-		}, "Tetris Animator");
-		// --
-		gameStart = System.currentTimeMillis();
+		}, "Tetris Animator");		
 		// --
 		animator.start();
 	}
@@ -86,13 +74,7 @@ public class Controller implements GameDataChangedListener {
 			animator.interrupt();
 		}
 	}
-
-	// ---------------------------------------------------------------------------
-
-	public long getGameDuration() {
-		return gameDuration;
-	}
-
+	
 	// ---------------------------------------------------------------------------
 
 	@Override
@@ -119,7 +101,7 @@ public class Controller implements GameDataChangedListener {
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void gameOver() {
+	public void gameOver(long score, int level, long duration) {
 		stop();
 	}
 }
