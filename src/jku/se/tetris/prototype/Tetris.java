@@ -3,10 +3,17 @@ package jku.se.tetris.prototype;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import jku.se.tetris.control.Controller;
@@ -43,9 +50,12 @@ public class Tetris implements GameDataChangedListener {
 	private JGameField view;
 	private Controller controller;
 	private StatisticsProvider statistics;
+
 	// ---------------------------------------------------------------------------
 
 	private JFrame frame;
+	private JFrame menue;
+	private JFrame regFrame;
 
 	// ---------------------------------------------------------------------------
 
@@ -59,6 +69,10 @@ public class Tetris implements GameDataChangedListener {
 		gamefield.addDataChangedListener(this);
 		// --
 		statistics = new StatisticsProvider(gamefield);
+		//--
+		menue = createMenueFrame();
+		//--
+		regFrame = createregFrame();
 		// --
 		frame = createFrame();
 		// --
@@ -66,16 +80,168 @@ public class Tetris implements GameDataChangedListener {
 		// --
 		GraphicsProviderRegistry.setProvider(new SwingGraphicsAdaptor(BLOCK_SIZE));
 		// --
-		show();
+		showmenue();
+		//--
+		
 	}
 
-	// ---------------------------------------------------------------------------
+	
+	private void showmenue() {
+		menue.setLocation(100, 100);
+		menue.pack();
+		menue.setSize(540, 700);
+		menue.setResizable(false);
+		menue.setVisible(true);
+		regFrame.setVisible(false);
+		
+	}
 
+	private JFrame createMenueFrame() {
+		final JFrame frame = new JFrame(WINDOW_TITLE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		Container cp = frame.getContentPane();
+		cp.setLayout(null);
+		
+		JButton onlineSpielen = new JButton(" Online Spielen ");
+		
+		onlineSpielen.setBounds(100, 50, 340, 150);
+		cp.add(onlineSpielen);
+		
+		JButton spielen = new JButton(" Spielen ");
+	
+		spielen.setBounds(100, 250, 340, 150);
+		cp.add(spielen);
+		
+		JButton exit = new JButton(" Statistik ");
+
+		exit.setBounds(100, 450, 340, 150);
+		cp.add(exit);
+		
+		onlineSpielen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showregFrame();
+			}
+		});
+		
+		spielen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				show();
+				controller.start();
+			}
+		});
+		
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				statistics.showScoreListDialog();
+			}
+		});
+		return frame;
+	}
+
+	
+	
+	private JFrame createregFrame() {
+		final JFrame frame = new JFrame(WINDOW_TITLE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		Container cp = frame.getContentPane();
+		cp.setLayout(null);
+		
+		JTextField benutzernameinput = new JTextField();
+		JTextField passwortinput = new JTextField();
+		
+		JLabel anmelden = new JLabel("Anmelden: ");
+		anmelden.setBounds(100, 95,200, 25);
+		cp.add(anmelden);
+		JLabel benutzername = new JLabel("Benutzername");
+		JLabel passwort = new JLabel("Passwort");
+		benutzername.setBounds(100, 125,200, 25);
+		cp.add(benutzername);
+		passwort.setBounds(100, 175, 200, 25);
+		cp.add(passwort);
+		benutzernameinput.setBounds(100, 150,200, 25);
+		benutzernameinput.setToolTipText("Benutzername");
+		cp.add(benutzernameinput);
+		passwortinput.setBounds(100, 200, 200, 25);
+		passwortinput.setToolTipText("Passwort");
+		cp.add(passwortinput);
+		
+		JTextField neubenutzerinput = new JTextField();
+		JTextField neupasswortinput = new JTextField();
+		JTextField neupasswortcorrinput = new JTextField();
+		
+		JLabel reg = new JLabel("Registrieren: ");
+		reg.setBounds(100, 345,200, 25);
+		cp.add(reg);
+		
+		JLabel neubenutzername = new JLabel("Benutzername");
+		JLabel neupasswort = new JLabel("Passwort");
+		JLabel neupasswortcorr = new JLabel("Passwort");
+		
+		neubenutzerinput.setBounds(100, 400,200, 25);
+		cp.add(neubenutzerinput);
+		neubenutzerinput.setToolTipText("Benutzername");
+		neupasswortinput.setBounds(100, 450, 200, 25);
+		neupasswortinput.setToolTipText("Passwort");
+		cp.add(neupasswortinput);
+		neubenutzername.setBounds(100, 375,200, 25);
+		
+		cp.add(neubenutzername);
+		neupasswort.setBounds(100, 475, 200, 25);
+		neupasswortcorr.setBounds(100, 425, 200, 25);
+		cp.add(neupasswortcorr);
+		cp.add(neupasswort);
+		neupasswortcorrinput.setBounds(100, 500, 200, 25);
+		neupasswortcorrinput.setToolTipText("Passwort");
+		cp.add(neupasswortcorrinput);
+		
+		JButton login = new JButton("Login");
+		login.setBounds(100, 225, 200, 25);
+		cp.add(login);
+		
+		JButton registrieren = new JButton("Registrieren");
+		registrieren.setBounds(100, 525, 200, 25);
+		cp.add(registrieren);
+		
+		login.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				show();
+				controller.start();
+			}
+		});
+		registrieren.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showmenue();
+			}
+		});
+		
+		
+		return frame;
+	}
+	// ---------------------------------------------------------------------------
+	
 	public void show() {
 		frame.setLocation(100, 100);
 		frame.pack();
 		frame.setResizable(false);
 		frame.setVisible(true);
+		menue.setVisible(false);
+		regFrame.setVisible(false);
+	}
+
+	// ---------------------------------------------------------------------------
+	
+	public void showregFrame() {
+		regFrame.setLocation(100, 100);
+		regFrame.pack();
+		regFrame.setSize(540, 700);
+		regFrame.setResizable(false);
+		regFrame.setVisible(true);
+		menue.setVisible(false);
 	}
 
 	// ---------------------------------------------------------------------
