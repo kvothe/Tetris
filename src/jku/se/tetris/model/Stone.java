@@ -74,16 +74,26 @@ public class Stone {
 	private Block[] createShape(EStoneShape shape) {
 		//@formatter:off
 		switch (shape) {
-			case I_SHAPE: return SHAPE_I;
-			case O_SHAPE: return SHAPE_O;
-			case T_SHAPE: return SHAPE_T;
-			case S_SHAPE: return SHAPE_S;
-			case Z_SHAPE: return SHAPE_Z;
-			case L_SHAPE: return SHAPE_L;
-			case J_SHAPE: return SHAPE_J;
-			default: 	  return SHAPE_I;
+			case I_SHAPE: return SHAPE_I.clone();
+			case O_SHAPE: return SHAPE_O.clone();
+			case T_SHAPE: return SHAPE_T.clone();
+			case S_SHAPE: return SHAPE_S.clone();
+			case Z_SHAPE: return SHAPE_Z.clone();
+			case L_SHAPE: return SHAPE_L.clone();
+			case J_SHAPE: return SHAPE_J.clone();
+			default: 	  return SHAPE_I.clone();
 		}
 		//@formatter:on
+	}
+
+	// ---------------------------------------------------------------------------
+	private boolean isValid = true;
+
+	public void setDirty() {
+		isValid = false;
+	}
+	public boolean isValid() {
+		return isValid;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -162,29 +172,29 @@ public class Stone {
 	private void rotate() {
 		//@formatter:off
 		switch (shape) {
-			case I_SHAPE:	if (orientation == 90 || orientation == 270) blocks = SHAPE_I_90; 
-						  	else blocks = SHAPE_I; 
+			case I_SHAPE:	if (orientation == 90 || orientation == 270) blocks = SHAPE_I_90.clone(); 
+						  	else blocks = SHAPE_I.clone(); 
 							break;			
-			case T_SHAPE: 	if (orientation == 0) blocks = SHAPE_T;
-							else if (orientation == 90) blocks = SHAPE_T_90;
-							else if (orientation == 180) blocks = SHAPE_T_180; 
-							else if (orientation == 270) blocks = SHAPE_T_270; 
+			case T_SHAPE: 	if (orientation == 0) blocks = SHAPE_T.clone();
+							else if (orientation == 90) blocks = SHAPE_T_90.clone();
+							else if (orientation == 180) blocks = SHAPE_T_180.clone(); 
+							else if (orientation == 270) blocks = SHAPE_T_270.clone(); 
 			  			  	break;
-			case S_SHAPE:	if (orientation == 90 || orientation == 270) blocks = SHAPE_S_90;
-							else blocks = SHAPE_S;							 
+			case S_SHAPE:	if (orientation == 90 || orientation == 270) blocks = SHAPE_S_90.clone();
+							else blocks = SHAPE_S.clone();							 
 							break;
-			case Z_SHAPE: 	if (orientation == 90 || orientation == 270) blocks = SHAPE_Z_90;
-							else blocks = SHAPE_Z;							 
+			case Z_SHAPE: 	if (orientation == 90 || orientation == 270) blocks = SHAPE_Z_90.clone();
+							else blocks = SHAPE_Z.clone();							 
 							break;
-			case L_SHAPE: 	if (orientation == 0) blocks = SHAPE_L;
-							else if (orientation == 90) blocks = SHAPE_L_90;
-							else if (orientation == 180) blocks = SHAPE_L_180; 
-							else if (orientation == 270) blocks = SHAPE_L_270; 
+			case L_SHAPE: 	if (orientation == 0) blocks = SHAPE_L.clone();
+							else if (orientation == 90) blocks = SHAPE_L_90.clone();
+							else if (orientation == 180) blocks = SHAPE_L_180.clone(); 
+							else if (orientation == 270) blocks = SHAPE_L_270.clone(); 
 							break;
-			case J_SHAPE: 	if (orientation == 0) blocks = SHAPE_J;
-							else if (orientation == 90) blocks = SHAPE_J_90;
-							else if (orientation == 180) blocks = SHAPE_J_180; 
-							else if (orientation == 270) blocks = SHAPE_J_270; 
+			case J_SHAPE: 	if (orientation == 0) blocks = SHAPE_J.clone();
+							else if (orientation == 90) blocks = SHAPE_J_90.clone();
+							else if (orientation == 180) blocks = SHAPE_J_180.clone(); 
+							else if (orientation == 270) blocks = SHAPE_J_270.clone(); 
 							break;	
 		}
 		//@formatter:on

@@ -100,6 +100,7 @@ public class GameFieldImpl implements GameField {
 			nextStone = new Stone();
 		} else {
 			activeStone = new Stone();
+			nextStone = new Stone();
 		}
 		// --
 		activeStone.move((width / 2) + (activeStone.getWidth() > 1 ? -1 : 0), 0);
@@ -111,9 +112,10 @@ public class GameFieldImpl implements GameField {
 		}
 		// --
 		notifyStoneAdded();
-		// --		
+		// --
 		notifyAnnounceNextStone();
 	}
+
 	// ---------------------------------------------------------------------------
 
 	@Override

@@ -1,6 +1,7 @@
 package jku.se.tetris.prototype;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,12 +21,21 @@ import jku.se.tetris.model.GameFieldImpl;
 import jku.se.tetris.model.GraphicsProviderRegistry;
 import jku.se.tetris.model.exception.InvalidActionException;
 import jku.se.tetris.ui.swing.JGameField;
+import jku.se.tetris.ui.swing.JNextStoneAnnouncer;
+import jku.se.tetris.ui.swing.JScoreBoard;
 import jku.se.tetris.ui.swing.SwingGraphicsAdaptor;
 
 public class Tetris implements GameDataChangedListener {
 	private static final int BLOCK_SIZE = 30;
-	private static final int GAME_FIELD_WIDTH = 11;
+	private static final int GAME_FIELD_WIDTH = 10;
 	private static final int GAME_FIELD_HEIGHT = 20;
+
+	// ---------------------------------------------------------------------------
+
+	// private static final Color BACKGROUND_COLOR = Color.BLACK;
+	private static final Color BACKGROUND_COLOR = new Color(32, 47, 70);
+	private static final Color BORDER_COLOR = Color.WHITE;
+	private static final Color TEXT_COLOR = Color.WHITE;
 
 	// ---------------------------------------------------------------------------
 
@@ -45,7 +55,7 @@ public class Tetris implements GameDataChangedListener {
 
 	public Tetris() {
 		gamefield = new GameFieldImpl(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT);
-		view = new JGameField(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT, BLOCK_SIZE);
+		view = new JGameField(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT, BLOCK_SIZE, BACKGROUND_COLOR, BORDER_COLOR);
 		controller = new Controller(gamefield);
 		// --
 		gamefield.addFieldChangedListener(view);
@@ -102,8 +112,30 @@ public class Tetris implements GameDataChangedListener {
 		// Playing field
 		//
 		Container cp = frame.getContentPane();
+		cp.setBackground(BACKGROUND_COLOR);
 		cp.setLayout(new BorderLayout());
-		cp.add(view, BorderLayout.CENTER);
+		cp.add(view, BorderLayout.WEST);
+		view.setDoubleBuffered(true);
+
+		Container hud = new Container();
+		hud.setLayout(new BorderLayout(BLOCK_SIZE, BLOCK_SIZE));
+
+		//
+		// Next Stone Announcer
+		//
+		JNextStoneAnnouncer announcer = new JNextStoneAnnouncer(6, 6, BLOCK_SIZE, BACKGROUND_COLOR, BORDER_COLOR);
+		gamefield.addFieldChangedListener(announcer);
+		gamefield.addDataChangedListener(announcer);
+		hud.add(announcer, BorderLayout.NORTH);
+
+		//
+		// Scoreboard
+		//
+		JScoreBoard scoreboard = new JScoreBoard((int)announcer.getPreferredSize().getWidth(), 90, BLOCK_SIZE / 2, BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
+		gamefield.addDataChangedListener(scoreboard);
+		hud.add(scoreboard, BorderLayout.CENTER);
+		// --
+		cp.add(hud, BorderLayout.EAST);
 
 		// MenuItem: Game -> Start
 		itemStart.addActionListener(new ActionListener() {
@@ -198,6 +230,6 @@ public class Tetris implements GameDataChangedListener {
 	// ---------------------------------------------------------------------------
 
 	public static void main(String[] args) {
-		new Tetris();		
+		new Tetris();
 	}
 }

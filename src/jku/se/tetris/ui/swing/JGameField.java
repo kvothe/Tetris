@@ -25,8 +25,8 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 	private int height;
 	private int blocksize;
 
-	private Color color = Color.BLACK;
-	private Color border = Color.WHITE;
+	private Color backgroundColor;
+	private Color borderColor;
 
 	// ---------------------------------------------------------------------
 
@@ -36,10 +36,13 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 
 	// ---------------------------------------------------------------------
 
-	public JGameField(int width, int height, int blocksize) {
+	public JGameField(int width, int height, int blocksize, Color bg, Color border) {
 		this.width = width;
 		this.height = height;
 		this.blocksize = blocksize;
+		// --
+		this.backgroundColor = bg;
+		this.borderColor = border;
 		// --
 		this.setPreferredSize(new Dimension((width + 2) * blocksize, (height + 2) * blocksize));
 	}
@@ -61,10 +64,10 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		// --
-		g.setColor(color);
+		g.setColor(backgroundColor);
 		g.fillRect(0, 0, (width + 2) * blocksize, (height + 2) * blocksize);
 		// --
-		g.setColor(border);
+		g.setColor(borderColor);
 		int offset = blocksize / 2;
 		g.drawRect(offset, offset, width * blocksize + offset * 2, height * blocksize + offset * 2);
 		g.drawRect(blocksize - 3, blocksize - 3, width * blocksize + 6, height * blocksize + 6);
@@ -84,15 +87,13 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 		}
 		// --
 		if (stone != null) {
-			for (Block b : stone.getBlocks()) {
-				GraphicsProviderRegistry.getProvider().drawBlock(g, (stone.getX() + b.getX() + 1) * blocksize, (stone.getY() + b.getY() + 1) * blocksize, b.getColor());
-			}
+			GraphicsProviderRegistry.getProvider().drawStone(g, stone);
 		}
 		// --
 		if (gameOver) {
-			g.setColor(color);
+			g.setColor(backgroundColor);
 			g.fillRect(blocksize * 2, height / 2 - 2 * blocksize, width - 2 * blocksize, blocksize * 4);
-			g.setColor(border);
+			g.setColor(borderColor);
 			g.drawRect(blocksize * 2, height / 2 - 2 * blocksize, width - 2 * blocksize, blocksize * 4);
 			// --
 			g.drawString("GAME OVER", blocksize * 4, height / 2);
