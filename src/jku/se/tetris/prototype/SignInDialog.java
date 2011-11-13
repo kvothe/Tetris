@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -36,10 +37,14 @@ public class SignInDialog extends JDialog {
 		setVisible(true);
 	}
 
+	public void close() {
+		setVisible(false);
+	}
+
 	// ---------------------------------------------------------------------------
 
 	private void createContent() {
-		Container cp = getContentPane();
+		final Container cp = getContentPane();
 		cp.setPreferredSize(new Dimension(350, 350));
 		cp.setLayout(new GroupLayout(cp));
 		// --
@@ -58,7 +63,7 @@ public class SignInDialog extends JDialog {
 		passwort.setBounds(75, 150, 200, 25);
 		cp.add(passwort);
 		benutzernameinput.setBounds(75, 125, 200, 25);
-		benutzernameinput.setToolTipText("3 to 20 character");
+		benutzernameinput.setToolTipText("3 to 20 characters");
 		cp.add(benutzernameinput);
 		passwortinput.setBounds(75, 175, 200, 25);
 		passwortinput.setToolTipText("8-character minimum; case sensitive");
@@ -72,10 +77,16 @@ public class SignInDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				String benutzername = benutzernameinput.getText();
 				String passwort = new String(passwortinput.getPassword());
-				if (benutzername.equalsIgnoreCase("Biene") && passwort.equalsIgnoreCase("Maier")) {
+				if (benutzername.equalsIgnoreCase("Max") && passwort.equalsIgnoreCase("Mustermann")) {
+					JOptionPane.showMessageDialog(cp.getParent(), "You are now signed in.", "Success", JOptionPane.INFORMATION_MESSAGE);
+					// --
 					benutzernameinput.setText("");
 					passwortinput.setText("");
+					// --
+					close();
 				} else {
+					JOptionPane.showMessageDialog(cp.getParent(), "Username or password incorrect.", "Failure", JOptionPane.ERROR_MESSAGE);
+					// --
 					benutzernameinput.setText("");
 					passwortinput.setText("");
 				}

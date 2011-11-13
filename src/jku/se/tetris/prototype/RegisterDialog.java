@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -36,10 +37,14 @@ public class RegisterDialog extends JDialog {
 		setVisible(true);
 	}
 
+	public void close() {
+		setVisible(false);
+	}
+
 	// ---------------------------------------------------------------------------
 
 	private void createContent() {
-		Container cp = getContentPane();
+		final Container cp = getContentPane();
 		cp.setPreferredSize(new Dimension(350, 350));
 		cp.setLayout(new GroupLayout(cp));
 		// --
@@ -58,7 +63,7 @@ public class RegisterDialog extends JDialog {
 		// --
 		neubenutzerinput.setBounds(75, 125, 200, 25);
 		cp.add(neubenutzerinput);
-		neubenutzerinput.setToolTipText("3 to 20 character");
+		neubenutzerinput.setToolTipText("3 to 20 characters");
 		neupasswortinput.setBounds(75, 175, 200, 25);
 		neupasswortinput.setToolTipText("8-character minimum; case sensitive");
 		cp.add(neupasswortinput);
@@ -72,14 +77,14 @@ public class RegisterDialog extends JDialog {
 		neupasswortcorrinput.setToolTipText("Retype password");
 		cp.add(neupasswortcorrinput);
 		// --
-		JButton zurueckreg = new JButton("Reset");
-		zurueckreg.setBounds(175, 255, 100, 25);
-		cp.add(zurueckreg);
+		JButton reset = new JButton("Reset");
+		reset.setBounds(175, 255, 100, 25);
+		cp.add(reset);
 		JButton registrieren = new JButton("Register");
 		registrieren.setBounds(75, 255, 100, 25);
 		cp.add(registrieren);
 		// --
-		zurueckreg.addActionListener(new ActionListener() {
+		reset.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				neubenutzerinput.setText("");
@@ -94,12 +99,27 @@ public class RegisterDialog extends JDialog {
 				String benutzername = neubenutzerinput.getText();
 				String passwort = new String(neupasswortinput.getPassword());
 				String passwortwieder = new String(neupasswortinput.getPassword());
-				if (benutzername.equalsIgnoreCase("Biene") && passwort.equalsIgnoreCase(passwortwieder) && passwort.equalsIgnoreCase("Maier")) {
+				if (benutzername.equalsIgnoreCase("Max") && passwort.equalsIgnoreCase(passwortwieder) && passwort.equalsIgnoreCase("Mustermann")) {
 					neubenutzerinput.setText("");
 					neupasswortinput.setText("");
 					neupasswortcorrinput.setText("");
+					// --
+					JOptionPane.showMessageDialog(cp.getParent(), "You are now registered.", "Successfully registered", JOptionPane.INFORMATION_MESSAGE);
+					close();
 				} else {
-
+					String errorMessage = "Sorry, this username is already taken.";
+					// --
+					if (passwort.length() < 8) {
+						errorMessage = "The password you entered does not meet the security standards (minimum of 8 characters).";
+					} else if (!passwort.equalsIgnoreCase(passwortwieder)) {
+						errorMessage = "The password confirmation does not match.";
+					}
+					// --
+					JOptionPane.showMessageDialog(cp.getParent(), errorMessage, "Failed to register", JOptionPane.ERROR_MESSAGE);
+					// --
+					neubenutzerinput.setText("");
+					neupasswortinput.setText("");
+					neupasswortcorrinput.setText("");
 				}
 			}
 		});
