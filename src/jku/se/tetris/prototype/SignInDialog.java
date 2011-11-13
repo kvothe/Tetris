@@ -58,10 +58,10 @@ public class SignInDialog extends JDialog {
 		passwort.setBounds(75, 150, 200, 25);
 		cp.add(passwort);
 		benutzernameinput.setBounds(75, 125, 200, 25);
-		benutzernameinput.setToolTipText("Name");
+		benutzernameinput.setToolTipText("3 to 20 character");
 		cp.add(benutzernameinput);
 		passwortinput.setBounds(75, 175, 200, 25);
-		passwortinput.setToolTipText("Password");
+		passwortinput.setToolTipText("8-character minimum; case sensitive");
 		cp.add(passwortinput);
 		// --
 		JButton login = new JButton("Login");
