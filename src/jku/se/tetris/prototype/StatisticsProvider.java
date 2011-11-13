@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import jku.se.tetris.model.GameDataChangedListener;
@@ -81,8 +82,9 @@ public class StatisticsProvider implements GameDataChangedListener {
 			}
 			// --
 			JTable table = new JTable(data, new String[] { "Name", "Score", "Level", "Duration" });
-			cp.add(table, BorderLayout.CENTER);
-
+			table.getTableHeader().setReorderingAllowed(false);
+			table.getTableHeader().setResizingAllowed(false);
+			cp.add(new JScrollPane(table), BorderLayout.CENTER);
 			// --
 			dialog.pack();
 			dialog.setVisible(true);
