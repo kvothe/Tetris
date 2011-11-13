@@ -43,15 +43,19 @@ public class MenuProvider {
 		// Game -> Reset
 		JMenuItem itemStart = new JMenuItem("Start");
 		menuGame.add(itemStart);
+		// --
+		menuGame.addSeparator();
 		// Game -> Reset
 		JMenuItem itemPause = new JMenuItem("Pause");
 		menuGame.add(itemPause);
 		// Game -> Reset
 		JMenuItem itemResume = new JMenuItem("Resume");
 		menuGame.add(itemResume);
+		// --
+		menuGame.addSeparator();
 		// Game -> Exit
-		/*JMenuItem itemExit = new JMenuItem("Exit");
-		menuGame.add(itemExit);*/
+		JMenuItem itemExit = new JMenuItem("Exit");
+		menuGame.add(itemExit);
 		//
 		// Statistics
 		//
@@ -60,6 +64,22 @@ public class MenuProvider {
 		// Statistics -> Show Highscore
 		JMenuItem itemHighscore = new JMenuItem("Show Highscore...");
 		menuStatistics.add(itemHighscore);
+		//
+		// User
+		//
+		JMenu menuUser = new JMenu("User");
+		menuBar.add(menuUser);
+		// --
+		JMenuItem itemSignIn = new JMenuItem("Sign In...");
+		menuUser.add(itemSignIn);
+		// --
+		JMenuItem itemSignOut = new JMenuItem("Sign Out");
+		menuUser.add(itemSignOut);
+		// --
+		menuUser.addSeparator();
+		// --
+		JMenuItem itemRegister = new JMenuItem("Register...");
+		menuUser.add(itemRegister);
 
 		// MenuItem: Game -> Start
 		itemStart.addActionListener(new ActionListener() {
@@ -83,22 +103,44 @@ public class MenuProvider {
 			}
 		});
 		// MenuItem: Game -> Exit
-		/*itemExit.addActionListener(new ActionListener() {
+		itemExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.stop();
 				frame.dispose();
 			}
 		});
-		nicht compatibel mit multiframes ...
-		
-		*/
 
 		// MenuItem: Statistics -> Show Highscore
 		itemHighscore.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				statistics.showScoreListDialog();
+			}
+		});
+
+		// MenuItem: User -> SignIn
+		itemSignIn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RegisterDialog dialog = new RegisterDialog(frame);
+				dialog.open();
+			}
+		});
+		// MenuItem: User -> SignOut
+		itemSignOut.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RegisterDialog dialog = new RegisterDialog(frame);
+				dialog.open();
+			}
+		});
+		// MenuItem: User -> Register
+		itemRegister.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RegisterDialog dialog = new RegisterDialog(frame);
+				dialog.open();
 			}
 		});
 	}
