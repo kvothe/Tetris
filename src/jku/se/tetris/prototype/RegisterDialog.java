@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class RegisterDialog extends JDialog {
@@ -40,44 +41,43 @@ public class RegisterDialog extends JDialog {
 
 	private void createContent() {
 		Container cp = getContentPane();
-		cp.setPreferredSize(new Dimension(350, 600));
+		cp.setPreferredSize(new Dimension(350, 350));
 		cp.setLayout(new GroupLayout(cp));
 		// --
 		final JTextField neubenutzerinput = new JTextField();
-		final JTextField neupasswortinput = new JTextField();
-		final JTextField neupasswortcorrinput = new JTextField();
+		final JPasswordField neupasswortinput = new JPasswordField();
+		final JPasswordField neupasswortcorrinput = new JPasswordField();
 		// --
 		JLabel reg = new JLabel("Registrieren: ");
 		reg.setFont(new Font("Ueberschrift", 0, 20));
-		reg.setBounds(100, 345, 200, 25);
+		reg.setBounds(75, 70, 200, 25);
 		cp.add(reg);
 		// --
-		JLabel neubenutzername = new JLabel("Benutzername");
-		JLabel neupasswort = new JLabel("Wiederholte Eingabe");
-		JLabel neupasswortcorr = new JLabel("Passwort");
+		JLabel neubenutzername = new JLabel("Name");
+		JLabel neupasswort = new JLabel("Create a password");
+		JLabel neupasswortcorr = new JLabel("Retype password");
 		// --
-		neubenutzerinput.setBounds(100, 400, 200, 25);
+		neubenutzerinput.setBounds(75, 125, 200, 25);
 		cp.add(neubenutzerinput);
-		neubenutzerinput.setToolTipText("Benutzername");
-		neupasswortinput.setBounds(100, 450, 200, 25);
-		neupasswortinput.setToolTipText("Passwort");
+		neubenutzerinput.setToolTipText("Name");
+		neupasswortinput.setBounds(75, 175, 200, 25);
+		neupasswortinput.setToolTipText("6-character minimum; case sensitive");
 		cp.add(neupasswortinput);
-		neubenutzername.setBounds(100, 375, 200, 25);
-		// --
+		neubenutzername.setBounds(75, 100, 200, 25);
 		cp.add(neubenutzername);
-		neupasswort.setBounds(100, 475, 200, 25);
-		neupasswortcorr.setBounds(100, 425, 200, 25);
+		neupasswort.setBounds(75, 150, 200, 25);
+		neupasswortcorr.setBounds(75, 200, 200, 25);
 		cp.add(neupasswortcorr);
 		cp.add(neupasswort);
-		neupasswortcorrinput.setBounds(100, 500, 200, 25);
-		neupasswortcorrinput.setToolTipText("Passwort");
+		neupasswortcorrinput.setBounds(75, 225, 200, 25);
+		neupasswortcorrinput.setToolTipText("Retype password");
 		cp.add(neupasswortcorrinput);
 		// --
 		JButton zurueckreg = new JButton("Reset");
-		zurueckreg.setBounds(200, 530, 100, 25);
+		zurueckreg.setBounds(175, 255, 100, 25);
 		cp.add(zurueckreg);
 		JButton registrieren = new JButton("Register");
-		registrieren.setBounds(100, 530, 100, 25);
+		registrieren.setBounds(75, 255, 100, 25);
 		cp.add(registrieren);
 		// --
 		zurueckreg.addActionListener(new ActionListener() {
@@ -93,13 +93,14 @@ public class RegisterDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String benutzername = neubenutzerinput.getText();
-				String passwort = neupasswortinput.getText();
-				if (benutzername.equalsIgnoreCase("Biene") && neupasswortinput.getText().equalsIgnoreCase(neupasswortcorrinput.getText()) && passwort.equalsIgnoreCase("Maier")) {
+				String passwort = neupasswortinput.getPassword()+"";
+				String passwortwieder = neupasswortinput.getPassword()+"";
+				if (benutzername.equalsIgnoreCase("Biene") && passwort.equalsIgnoreCase(passwortwieder) && passwort.equalsIgnoreCase("Maier")) {
 					neubenutzerinput.setText("");
 					neupasswortinput.setText("");
 					neupasswortcorrinput.setText("");
 				} else {
-					// showmenue();
+					
 				}
 			}
 		});
