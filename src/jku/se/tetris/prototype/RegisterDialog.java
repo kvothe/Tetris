@@ -60,7 +60,7 @@ public class RegisterDialog extends JDialog {
 		cp.add(neubenutzerinput);
 		neubenutzerinput.setToolTipText("Name");
 		neupasswortinput.setBounds(75, 175, 200, 25);
-		neupasswortinput.setToolTipText("6-character minimum; case sensitive");
+		neupasswortinput.setToolTipText("8-character minimum; case sensitive");
 		cp.add(neupasswortinput);
 		neubenutzername.setBounds(75, 100, 200, 25);
 		cp.add(neubenutzername);
