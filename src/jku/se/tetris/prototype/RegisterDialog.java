@@ -47,7 +47,7 @@ public class RegisterDialog extends JDialog {
 		final JPasswordField neupasswortinput = new JPasswordField();
 		final JPasswordField neupasswortcorrinput = new JPasswordField();
 		// --
-		JLabel reg = new JLabel("Registrieren: ");
+		JLabel reg = new JLabel("Register");
 		reg.setFont(getParent().getFont().deriveFont(20f));
 		reg.setBounds(75, 70, 200, 25);
 		cp.add(reg);

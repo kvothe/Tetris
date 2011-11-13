@@ -47,7 +47,7 @@ public class SignInDialog extends JDialog {
 		final JTextField benutzernameinput = new JTextField();
 		final JPasswordField passwortinput = new JPasswordField();
 		// --
-		JLabel anmelden = new JLabel("Login: ");
+		JLabel anmelden = new JLabel("Sign In");
 		anmelden.setFont(getParent().getFont().deriveFont(20f));
 		anmelden.setBounds(75, 70, 200, 25);
 		cp.add(anmelden);

@@ -64,7 +64,7 @@ public class StatisticsProvider implements GameDataChangedListener {
 			cp.add(buttons, BorderLayout.NORTH);
 			buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 			// --
-			JLabel text = new JLabel("   Selection :");
+			JLabel text = new JLabel("   Selection");
 			text.setFont(gui.getFont().deriveFont(20f));
 			// --
 			JRadioButton btn1 = new JRadioButton("Highest Score");
