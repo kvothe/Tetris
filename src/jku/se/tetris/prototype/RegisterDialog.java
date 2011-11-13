@@ -21,7 +21,6 @@ public class RegisterDialog extends JDialog {
 	public RegisterDialog(JFrame parent) {
 		super(parent);
 		// --
-		// setPreferredSize(new Dimension(300, 600));
 		setTitle("Register...");
 		createContent();
 		pack();

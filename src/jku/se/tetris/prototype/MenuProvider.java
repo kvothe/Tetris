@@ -15,7 +15,7 @@ import jku.se.tetris.model.GameField;
 public class MenuProvider {
 
 	private JFrame frame;
-	private GameField gamefield;
+	// private GameField gamefield;
 	private Controller controller;
 	private StatisticsProvider statistics;
 
@@ -23,7 +23,7 @@ public class MenuProvider {
 
 	public MenuProvider(JFrame frame, GameField gamefield, Controller controller, StatisticsProvider statistics) {
 		this.frame = frame;
-		this.gamefield = gamefield;
+		// this.gamefield = gamefield;
 		this.controller = controller;
 		this.statistics = statistics;
 		// --
