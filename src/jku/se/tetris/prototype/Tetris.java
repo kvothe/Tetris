@@ -3,6 +3,7 @@ package jku.se.tetris.prototype;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,7 +62,8 @@ public class Tetris implements GameDataChangedListener {
 
 	public Tetris() {
 		gamefield = new GameFieldImpl(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT);
-		view = new JGameField(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT, BLOCK_SIZE, BACKGROUND_COLOR, BORDER_COLOR);
+		view = new JGameField(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT, BLOCK_SIZE,
+				BACKGROUND_COLOR, BORDER_COLOR);
 		controller = new Controller(gamefield);
 		// --
 		gamefield.addFieldChangedListener(view);
@@ -69,23 +71,23 @@ public class Tetris implements GameDataChangedListener {
 		gamefield.addDataChangedListener(this);
 		// --
 		statistics = new StatisticsProvider(gamefield);
-		//--
+		// --
 		menue = createMenueFrame();
-		//--
+		// --
 		regFrame = createregFrame();
 		// --
 		frame = createFrame();
 		// --
 		statistics.setGui(frame);
 		// --
-		GraphicsProviderRegistry.setProvider(new SwingGraphicsAdaptor(BLOCK_SIZE));
+		GraphicsProviderRegistry.setProvider(new SwingGraphicsAdaptor(
+				BLOCK_SIZE));
 		// --
 		showmenue();
-		//--
-		
+		// --
+
 	}
 
-	
 	private void showmenue() {
 		menue.setLocation(100, 100);
 		menue.pack();
@@ -93,7 +95,7 @@ public class Tetris implements GameDataChangedListener {
 		menue.setResizable(false);
 		menue.setVisible(true);
 		regFrame.setVisible(false);
-		
+
 	}
 
 	private JFrame createMenueFrame() {
@@ -101,29 +103,34 @@ public class Tetris implements GameDataChangedListener {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		Container cp = frame.getContentPane();
 		cp.setLayout(null);
+
+		JLabel reg = new JLabel("Tetris V. 0.5");
+		reg.setFont(new Font("Produktname ", 0, 50));
+		reg.setBounds(120, 100, 350, 50);
+		cp.add(reg);
 		
 		JButton onlineSpielen = new JButton(" Online Spielen ");
-		
-		onlineSpielen.setBounds(100, 50, 340, 150);
+
+		onlineSpielen.setBounds(150, 200, 240, 100);
 		cp.add(onlineSpielen);
-		
+
 		JButton spielen = new JButton(" Spielen ");
-	
-		spielen.setBounds(100, 250, 340, 150);
+
+		spielen.setBounds(150, 350, 240, 100);
 		cp.add(spielen);
-		
+
 		JButton exit = new JButton(" Statistik ");
 
-		exit.setBounds(100, 450, 340, 150);
+		exit.setBounds(150, 500, 240, 100);
 		cp.add(exit);
-		
+
 		onlineSpielen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				showregFrame();
 			}
 		});
-		
+
 		spielen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -131,7 +138,7 @@ public class Tetris implements GameDataChangedListener {
 				controller.start();
 			}
 		});
-		
+
 		exit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -141,53 +148,53 @@ public class Tetris implements GameDataChangedListener {
 		return frame;
 	}
 
-	
-	
 	private JFrame createregFrame() {
 		final JFrame frame = new JFrame(WINDOW_TITLE);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		Container cp = frame.getContentPane();
 		cp.setLayout(null);
-		
-		JTextField benutzernameinput = new JTextField();
-		JTextField passwortinput = new JTextField();
-		
+
+		final JTextField benutzernameinput = new JTextField();
+		final JTextField passwortinput = new JTextField();
+
 		JLabel anmelden = new JLabel("Anmelden: ");
-		anmelden.setBounds(100, 95,200, 25);
+		anmelden.setFont(new Font("Ueberschrift", 0, 20));
+		anmelden.setBounds(100, 95, 200, 25);
 		cp.add(anmelden);
 		JLabel benutzername = new JLabel("Benutzername");
 		JLabel passwort = new JLabel("Passwort");
-		benutzername.setBounds(100, 125,200, 25);
+		benutzername.setBounds(100, 125, 200, 25);
 		cp.add(benutzername);
 		passwort.setBounds(100, 175, 200, 25);
 		cp.add(passwort);
-		benutzernameinput.setBounds(100, 150,200, 25);
+		benutzernameinput.setBounds(100, 150, 200, 25);
 		benutzernameinput.setToolTipText("Benutzername");
 		cp.add(benutzernameinput);
 		passwortinput.setBounds(100, 200, 200, 25);
 		passwortinput.setToolTipText("Passwort");
 		cp.add(passwortinput);
-		
-		JTextField neubenutzerinput = new JTextField();
-		JTextField neupasswortinput = new JTextField();
-		JTextField neupasswortcorrinput = new JTextField();
-		
+
+		final JTextField neubenutzerinput = new JTextField();
+		final JTextField neupasswortinput = new JTextField();
+		final JTextField neupasswortcorrinput = new JTextField();
+
 		JLabel reg = new JLabel("Registrieren: ");
-		reg.setBounds(100, 345,200, 25);
+		reg.setFont(new Font("Ueberschrift", 0, 20));
+		reg.setBounds(100, 345, 200, 25);
 		cp.add(reg);
-		
+
 		JLabel neubenutzername = new JLabel("Benutzername");
-		JLabel neupasswort = new JLabel("Passwort");
+		JLabel neupasswort = new JLabel("Wiederholte Eingabe");
 		JLabel neupasswortcorr = new JLabel("Passwort");
-		
-		neubenutzerinput.setBounds(100, 400,200, 25);
+
+		neubenutzerinput.setBounds(100, 400, 200, 25);
 		cp.add(neubenutzerinput);
 		neubenutzerinput.setToolTipText("Benutzername");
 		neupasswortinput.setBounds(100, 450, 200, 25);
 		neupasswortinput.setToolTipText("Passwort");
 		cp.add(neupasswortinput);
-		neubenutzername.setBounds(100, 375,200, 25);
-		
+		neubenutzername.setBounds(100, 375, 200, 25);
+
 		cp.add(neubenutzername);
 		neupasswort.setBounds(100, 475, 200, 25);
 		neupasswortcorr.setBounds(100, 425, 200, 25);
@@ -196,34 +203,74 @@ public class Tetris implements GameDataChangedListener {
 		neupasswortcorrinput.setBounds(100, 500, 200, 25);
 		neupasswortcorrinput.setToolTipText("Passwort");
 		cp.add(neupasswortcorrinput);
-		
+
 		JButton login = new JButton("Login");
-		login.setBounds(100, 225, 200, 25);
+		login.setBounds(100, 230, 100, 25);
 		cp.add(login);
 		
-		JButton registrieren = new JButton("Registrieren");
-		registrieren.setBounds(100, 525, 200, 25);
+		JButton zurueck = new JButton("Zurück");
+		zurueck.setBounds(200, 230, 100, 25);
+		cp.add(zurueck);
+		JButton zurueckreg = new JButton("Reset");
+		zurueckreg.setBounds(200, 530, 100, 25);
+		cp.add(zurueckreg);
+		JButton registrieren = new JButton("Register");
+		registrieren.setBounds(100, 530, 100, 25);
 		cp.add(registrieren);
-		
+
 		login.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String benutzername = benutzernameinput.getText();
+				String passwort = passwortinput.getText();				
+				if(benutzername.equalsIgnoreCase("Biene")&&passwort.equalsIgnoreCase("Maier")){
 				show();
-				controller.start();
+				controller.start();}
+				else{
+					benutzernameinput.setText("");
+					passwortinput.setText("");
+				}
 			}
 		});
-		registrieren.addActionListener(new ActionListener() {
+		
+		zurueckreg.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				neubenutzerinput.setText("");
+				neupasswortinput.setText("");
+				neupasswortcorrinput.setText("");
+			}
+		});
+		zurueck.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				showmenue();
 			}
 		});
 		
-		
+		registrieren.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String benutzername = neubenutzerinput.getText();
+				String passwort = neupasswortinput.getText();	
+				if(benutzername.equalsIgnoreCase("Biene")&&neupasswortinput.getText().equalsIgnoreCase(neupasswortcorrinput.getText())&&passwort.equalsIgnoreCase("Maier")){
+					benutzernameinput.setText(benutzername);
+					passwortinput.setText(passwort);
+					neubenutzerinput.setText("");
+					neupasswortinput.setText("");
+					neupasswortcorrinput.setText("");
+					}
+					else{
+						showmenue();
+					}
+			}
+		});
+
 		return frame;
 	}
+
 	// ---------------------------------------------------------------------------
-	
+
 	public void show() {
 		frame.setLocation(100, 100);
 		frame.pack();
@@ -234,7 +281,7 @@ public class Tetris implements GameDataChangedListener {
 	}
 
 	// ---------------------------------------------------------------------------
-	
+
 	public void showregFrame() {
 		regFrame.setLocation(100, 100);
 		regFrame.pack();
@@ -271,7 +318,8 @@ public class Tetris implements GameDataChangedListener {
 		//
 		// Next Stone Announcer
 		//
-		JNextStoneAnnouncer announcer = new JNextStoneAnnouncer(6, 6, BLOCK_SIZE, BACKGROUND_COLOR, BORDER_COLOR);
+		JNextStoneAnnouncer announcer = new JNextStoneAnnouncer(6, 6,
+				BLOCK_SIZE, BACKGROUND_COLOR, BORDER_COLOR);
 		gamefield.addFieldChangedListener(announcer);
 		gamefield.addDataChangedListener(announcer);
 		hud.add(announcer, BorderLayout.NORTH);
@@ -279,14 +327,18 @@ public class Tetris implements GameDataChangedListener {
 		//
 		// Scoreboard
 		//
-		JScoreBoard scoreboard = new JScoreBoard((int) announcer.getPreferredSize().getWidth(), 90, BLOCK_SIZE / 2, BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
+		JScoreBoard scoreboard = new JScoreBoard((int) announcer
+				.getPreferredSize().getWidth(), 90, BLOCK_SIZE / 2,
+				BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
 		gamefield.addDataChangedListener(scoreboard);
 		hud.add(scoreboard, BorderLayout.CENTER);
 
 		//
 		// Stopwatch
 		//
-		JStopwatch stopwatch = new JStopwatch((int) announcer.getPreferredSize().getWidth(), 60, BLOCK_SIZE / 2, BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
+		JStopwatch stopwatch = new JStopwatch((int) announcer
+				.getPreferredSize().getWidth(), 60, BLOCK_SIZE / 2,
+				BACKGROUND_COLOR, BORDER_COLOR, TEXT_COLOR);
 		gamefield.addDataChangedListener(stopwatch);
 		hud.add(stopwatch, BorderLayout.SOUTH);
 
@@ -313,14 +365,22 @@ public class Tetris implements GameDataChangedListener {
 		public void keyPressed(KeyEvent e) {
 			if (e.isActionKey()) {
 				try {
-					//@formatter:off
+					// @formatter:off
 					switch (e.getKeyCode()) {
-						case KeyEvent.VK_LEFT:	gamefield.moveStoneLeft();			break;
-						case KeyEvent.VK_RIGHT: gamefield.moveStoneRight();			break;
-						case KeyEvent.VK_UP: 	gamefield.rotateStoneClockwise();	break;
-						case KeyEvent.VK_DOWN: 	gamefield.moveStoneToBottom();		break;
+					case KeyEvent.VK_LEFT:
+						gamefield.moveStoneLeft();
+						break;
+					case KeyEvent.VK_RIGHT:
+						gamefield.moveStoneRight();
+						break;
+					case KeyEvent.VK_UP:
+						gamefield.rotateStoneClockwise();
+						break;
+					case KeyEvent.VK_DOWN:
+						gamefield.moveStoneToBottom();
+						break;
 					}
-					//@formatter:on
+					// @formatter:on
 				} catch (InvalidActionException exc) {
 					exc.printStackTrace(); // TODO improve handling
 				}
