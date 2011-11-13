@@ -2,6 +2,7 @@ package jku.se.tetris.prototype;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -64,19 +65,27 @@ public class StatisticsProvider implements GameDataChangedListener {
 			cp.add(buttons, BorderLayout.NORTH);
 			buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 			// --
-			JLabel text = new JLabel("Test");
-			JRadioButton btn1 = new JRadioButton("Choice 1");
-			JRadioButton btn2 = new JRadioButton("Choice 2");
-			JRadioButton btn3 = new JRadioButton("Choice 3");
+			JLabel text = new JLabel("   Selection :");
+			text.setFont(new Font("Ueberschrift", 0, 20));
+			JRadioButton btn1 = new JRadioButton("Max Score");
+			btn1.setSelected(true);
+			JRadioButton btn2 = new JRadioButton("Avrage Score");
+			JRadioButton btn3 = new JRadioButton("Max Difficulty");
+			JRadioButton btn4 = new JRadioButton("Avrage Difficulty");
+			JRadioButton btn5 = new JRadioButton("Avrage Time");
 			ButtonGroup group = new ButtonGroup();
 			group.add(btn1);
 			group.add(btn2);
 			group.add(btn3);
+			group.add(btn4);
+			group.add(btn5);
 			// --
 			buttons.add(text);
 			buttons.add(btn1);
 			buttons.add(btn2);
 			buttons.add(btn3);
+			buttons.add(btn4);
+			buttons.add(btn5);
 			// --
 			Collections.sort(scoreList, new Comparator<ScoreListEntry>() {
 
