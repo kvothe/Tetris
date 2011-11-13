@@ -123,17 +123,21 @@ public class StatisticsProvider implements GameDataChangedListener {
 	// ---------------------------------------------------------------------
 
 	@Override
-	public void gameOver(long score, int level, long duration) {
-		if (gui != null) {
-			// ask for name
-			String name = JOptionPane.showInputDialog(gui, "Please enter your name");
-			// --
-			if (name == null || name.length() == 0) {
-				name = "---";
+	public void gameOver(final long score, final int level, final long duration) {
+		new Thread(new Runnable() {
+			public void run() {
+				if (gui != null) {
+					// ask for name
+					String name = JOptionPane.showInputDialog(gui, "Please enter your name");
+					// --
+					if (name == null || name.length() == 0) {
+						name = "---";
+					}
+					// --
+					scoreList.add(new ScoreListEntry(name, score, level, duration));
+				}
 			}
-			// --
-			scoreList.add(new ScoreListEntry(name, score, level, duration));
-		}
+		}).start();
 	}
 
 	// ---------------------------------------------------------------------

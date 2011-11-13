@@ -90,7 +90,7 @@ public class Controller implements GameDataChangedListener {
 
 	@Override
 	public void levelChanged(int newLevel) {
-		speed = START_SPEED - (long) ((Math.log(newLevel) / Math.log(2) + 1) * 100);
+		speed = Math.max(30, (START_SPEED - (long) ((Math.log(newLevel) / Math.log(2) + 1) * 100)));
 	}
 
 	// ---------------------------------------------------------------------------

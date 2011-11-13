@@ -92,7 +92,7 @@ public class RegisterDialog extends JDialog {
 		login.setBounds(100, 230, 100, 25);
 		cp.add(login);
 		// --
-		JButton zurueck = new JButton("Zurück");
+		JButton zurueck = new JButton("ZurÃ¼ck");
 		zurueck.setBounds(200, 230, 100, 25);
 		cp.add(zurueck);
 		JButton zurueckreg = new JButton("Reset");

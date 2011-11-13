@@ -47,9 +47,11 @@ public class MenuProvider {
 		menuGame.addSeparator();
 		// Game -> Reset
 		JMenuItem itemPause = new JMenuItem("Pause");
+		itemPause.setEnabled(false);
 		menuGame.add(itemPause);
 		// Game -> Reset
 		JMenuItem itemResume = new JMenuItem("Resume");
+		itemResume.setEnabled(false);
 		menuGame.add(itemResume);
 		// --
 		menuGame.addSeparator();
