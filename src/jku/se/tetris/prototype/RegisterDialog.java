@@ -2,7 +2,6 @@ package jku.se.tetris.prototype;
 
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -49,12 +48,12 @@ public class RegisterDialog extends JDialog {
 		final JPasswordField neupasswortcorrinput = new JPasswordField();
 		// --
 		JLabel reg = new JLabel("Registrieren: ");
-		reg.setFont(new Font("Ueberschrift", 0, 20));
+		reg.setFont(getParent().getFont().deriveFont(20f));
 		reg.setBounds(75, 70, 200, 25);
 		cp.add(reg);
 		// --
 		JLabel neubenutzername = new JLabel("Name");
-		JLabel neupasswort = new JLabel("Create a password");
+		JLabel neupasswort = new JLabel("Enter a password");
 		JLabel neupasswortcorr = new JLabel("Retype password");
 		// --
 		neubenutzerinput.setBounds(75, 125, 200, 25);
@@ -93,14 +92,14 @@ public class RegisterDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String benutzername = neubenutzerinput.getText();
-				String passwort = neupasswortinput.getPassword()+"";
-				String passwortwieder = neupasswortinput.getPassword()+"";
+				String passwort = new String(neupasswortinput.getPassword());
+				String passwortwieder = new String(neupasswortinput.getPassword());
 				if (benutzername.equalsIgnoreCase("Biene") && passwort.equalsIgnoreCase(passwortwieder) && passwort.equalsIgnoreCase("Maier")) {
 					neubenutzerinput.setText("");
 					neupasswortinput.setText("");
 					neupasswortcorrinput.setText("");
 				} else {
-					
+
 				}
 			}
 		});
