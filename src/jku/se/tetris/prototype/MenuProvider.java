@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import jku.se.tetris.control.Controller;
 import jku.se.tetris.model.GameField;
@@ -125,7 +126,7 @@ public class MenuProvider {
 		itemSignIn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				RegisterDialog dialog = new RegisterDialog(frame);
+				SignInDialog dialog = new SignInDialog(frame);
 				dialog.open();
 			}
 		});
@@ -133,8 +134,7 @@ public class MenuProvider {
 		itemSignOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				RegisterDialog dialog = new RegisterDialog(frame);
-				dialog.open();
+				JOptionPane.showMessageDialog(frame, "You have been signed out.", "Sign Out", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		// MenuItem: User -> Register
