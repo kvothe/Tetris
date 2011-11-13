@@ -1,15 +1,16 @@
 package jku.se.tetris.prototype;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class RegisterDialog extends JDialog {
@@ -26,6 +27,8 @@ public class RegisterDialog extends JDialog {
 		pack();
 		// --
 		setModal(true);
+		// --
+		setLocationRelativeTo(parent);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -38,26 +41,8 @@ public class RegisterDialog extends JDialog {
 
 	private void createContent() {
 		Container cp = getContentPane();
-		// --
-		final JTextField benutzernameinput = new JTextField();
-		final JPasswordField passwortinput = new JPasswordField();
-		// --
-		JLabel anmelden = new JLabel("Anmelden: ");
-		anmelden.setFont(new Font("Ueberschrift", 0, 20));
-		anmelden.setBounds(100, 95, 200, 25);
-		cp.add(anmelden);
-		JLabel benutzername = new JLabel("Benutzername");
-		JLabel passwort = new JLabel("Passwort");
-		benutzername.setBounds(100, 125, 200, 25);
-		cp.add(benutzername);
-		passwort.setBounds(100, 175, 200, 25);
-		cp.add(passwort);
-		benutzernameinput.setBounds(100, 150, 200, 25);
-		benutzernameinput.setToolTipText("Benutzername");
-		cp.add(benutzernameinput);
-		passwortinput.setBounds(100, 200, 200, 25);
-		passwortinput.setToolTipText("Passwort");
-		cp.add(passwortinput);
+		cp.setPreferredSize(new Dimension(350, 600));
+		cp.setLayout(new GroupLayout(cp));
 		// --
 		final JTextField neubenutzerinput = new JTextField();
 		final JTextField neupasswortinput = new JTextField();
@@ -89,34 +74,12 @@ public class RegisterDialog extends JDialog {
 		neupasswortcorrinput.setToolTipText("Passwort");
 		cp.add(neupasswortcorrinput);
 		// --
-		JButton login = new JButton("Login");
-		login.setBounds(100, 230, 100, 25);
-		cp.add(login);
-		// --
-		JButton zurueck = new JButton("Zurück");
-		zurueck.setBounds(200, 230, 100, 25);
-		cp.add(zurueck);
 		JButton zurueckreg = new JButton("Reset");
 		zurueckreg.setBounds(200, 530, 100, 25);
 		cp.add(zurueckreg);
 		JButton registrieren = new JButton("Register");
 		registrieren.setBounds(100, 530, 100, 25);
 		cp.add(registrieren);
-		// --
-		login.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String benutzername = benutzernameinput.getText();
-				String passwort = passwortinput.getText();
-				if (benutzername.equalsIgnoreCase("Biene") && passwort.equalsIgnoreCase("Maier")) {
-					// show();
-					// controller.start();
-				} else {
-					benutzernameinput.setText("");
-					passwortinput.setText("");
-				}
-			}
-		});
 		// --
 		zurueckreg.addActionListener(new ActionListener() {
 			@Override
@@ -126,12 +89,6 @@ public class RegisterDialog extends JDialog {
 				neupasswortcorrinput.setText("");
 			}
 		});
-		zurueck.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// showmenue();
-			}
-		});
 		// --
 		registrieren.addActionListener(new ActionListener() {
 			@Override
@@ -139,8 +96,6 @@ public class RegisterDialog extends JDialog {
 				String benutzername = neubenutzerinput.getText();
 				String passwort = neupasswortinput.getText();
 				if (benutzername.equalsIgnoreCase("Biene") && neupasswortinput.getText().equalsIgnoreCase(neupasswortcorrinput.getText()) && passwort.equalsIgnoreCase("Maier")) {
-					benutzernameinput.setText(benutzername);
-					passwortinput.setText(passwort);
 					neubenutzerinput.setText("");
 					neupasswortinput.setText("");
 					neupasswortcorrinput.setText("");
