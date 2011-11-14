@@ -87,6 +87,7 @@ public class GameFieldImpl implements GameField {
 		notifyLevelChanged();
 		notifyBlocksChanged();
 		// --
+		MidiPlayer.resetBackgroundMusic();
 		MidiPlayer.startBackgroundMusic();
 		// --
 		try {

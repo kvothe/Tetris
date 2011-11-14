@@ -116,6 +116,7 @@ public class JStopwatch extends JComponent implements GameDataChangedListener {
 	@Override
 	public void gameStarted() {
 		this.gameStarted = System.currentTimeMillis();
+		this.gameOver = -1;
 		repaint();
 	}
 

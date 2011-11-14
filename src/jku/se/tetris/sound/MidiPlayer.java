@@ -30,13 +30,19 @@ public class MidiPlayer {
 	}
 
 	public static void startBackgroundMusic() {
-		if (backgroundSequencer != null) {
+		if (backgroundSequencer != null && backgroundSequencer.isOpen() && !backgroundSequencer.isRunning()) {
 			backgroundSequencer.start();
 		}
 	}
 
+	public static void resetBackgroundMusic() {
+		if (backgroundSequencer != null && backgroundSequencer.isOpen()) {
+			backgroundSequencer.setMicrosecondPosition(0);
+		}
+	}
+
 	public static void stopBackgroundMusic() {
-		if (backgroundSequencer != null) {
+		if (backgroundSequencer != null && backgroundSequencer.isOpen() && backgroundSequencer.isRunning()) {
 			backgroundSequencer.stop();
 		}
 	}
