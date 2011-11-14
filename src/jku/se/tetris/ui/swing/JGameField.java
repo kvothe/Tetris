@@ -89,7 +89,7 @@ public class JGameField extends JComponent implements GameFieldChangedListener, 
 			g.drawRect(blocksize * 2, height * blocksize / 2, width * blocksize - 2 * blocksize, blocksize * 3);
 			// --
 			SwingGraphicsAdaptor.setFontStyle(g, Font.BOLD, 36);
-			SwingGraphicsAdaptor.drawStringCenter(g, "GAME OVER", 10);
+			SwingGraphicsAdaptor.drawStringCenter(g, this, "GAME OVER", 10);
 		}
 		// --
 		repaint(g.getClipBounds());

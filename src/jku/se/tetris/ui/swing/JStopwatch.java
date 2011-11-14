@@ -51,7 +51,7 @@ public class JStopwatch extends JComponent implements GameDataChangedListener {
 			public void run() {
 				repaint();
 			}
-		}, 0, 50);
+		}, 0, 200);
 	}
 
 	// ---------------------------------------------------------------------
@@ -69,7 +69,7 @@ public class JStopwatch extends JComponent implements GameDataChangedListener {
 		// --
 		setFontStyle(g, Font.BOLD, 18);
 		// --
-		SwingGraphicsAdaptor.drawStringCenter(g, formatTime(), -5);
+		SwingGraphicsAdaptor.drawStringCenter(g, this, formatTime(), -5);
 	}
 
 	// ---------------------------------------------------------------------

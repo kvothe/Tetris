@@ -1,11 +1,8 @@
 package jku.se.tetris.sound;
 
-import java.io.IOException;
 import java.io.InputStream;
 
-import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;
 
 public class MidiPlayer {
@@ -20,36 +17,48 @@ public class MidiPlayer {
 			backgroundSequencer.setSequence(MidiSystem.getSequence(audioStream));
 			backgroundSequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
 
-		} catch (InvalidMidiDataException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (MidiUnavailableException e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
+			// --
 		}
 	}
 
 	public static void startBackgroundMusic() {
-		if (backgroundSequencer != null && backgroundSequencer.isOpen() && !backgroundSequencer.isRunning()) {
-			backgroundSequencer.start();
+		try {
+			if (backgroundSequencer != null && backgroundSequencer.isOpen() && !backgroundSequencer.isRunning()) {
+				backgroundSequencer.start();
+			}
+		} catch (Throwable e) {
+			// --
 		}
 	}
 
 	public static void resetBackgroundMusic() {
-		if (backgroundSequencer != null && backgroundSequencer.isOpen()) {
-			backgroundSequencer.setMicrosecondPosition(0);
+		try {
+			if (backgroundSequencer != null && backgroundSequencer.isOpen()) {
+				backgroundSequencer.setMicrosecondPosition(0);
+			}
+		} catch (Throwable e) {
+			// --
 		}
 	}
 
 	public static void stopBackgroundMusic() {
-		if (backgroundSequencer != null && backgroundSequencer.isOpen() && backgroundSequencer.isRunning()) {
-			backgroundSequencer.stop();
+		try {
+			if (backgroundSequencer != null && backgroundSequencer.isOpen() && backgroundSequencer.isRunning()) {
+				backgroundSequencer.stop();
+			}
+		} catch (Throwable e) {
+			// --
 		}
 	}
 
 	public static void teardown() {
-		if (backgroundSequencer != null) {
-			backgroundSequencer.close();
+		try {
+			if (backgroundSequencer != null) {
+				backgroundSequencer.close();
+			}
+		} catch (Throwable e) {
+			// --
 		}
 	}
 }

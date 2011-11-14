@@ -89,7 +89,7 @@ public class MenuProvider {
 		// Audio
 		//
 		JMenu menuAudio = new JMenu("Audio");
-		menuBar.add(menuAudio);
+		// menuBar.add(menuAudio);
 		// --
 		JMenuItem itemAudioStart = new JMenuItem("Play Music");
 		menuAudio.add(itemAudioStart);
@@ -101,7 +101,7 @@ public class MenuProvider {
 		itemStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.start();			
+				controller.start();
 			}
 		});
 		// MenuItem: Game -> Pause
