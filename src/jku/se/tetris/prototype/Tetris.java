@@ -46,8 +46,6 @@ public class Tetris implements GameDataChangedListener {
 	// ---------------------------------------------------------------------------
 
 	private JFrame frame;
-	private JFrame menue;
-	private JFrame regFrame;
 
 	// ---------------------------------------------------------------------------
 
@@ -80,16 +78,7 @@ public class Tetris implements GameDataChangedListener {
 		frame.setVisible(true);
 	}
 
-	// ---------------------------------------------------------------------------
-
-	public void showregFrame() {
-		regFrame.setLocation(100, 100);
-		regFrame.pack();
-		regFrame.setSize(540, 700);
-		regFrame.setResizable(false);
-		regFrame.setVisible(true);
-		menue.setVisible(false);
-	}
+	// ---------------------------------------------------------------------
 
 	// ---------------------------------------------------------------------
 

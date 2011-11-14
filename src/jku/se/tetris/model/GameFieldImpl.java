@@ -3,6 +3,7 @@ package jku.se.tetris.model;
 import java.util.ArrayList;
 
 import jku.se.tetris.model.exception.InvalidActionException;
+import jku.se.tetris.sound.MidiPlayer;
 
 public class GameFieldImpl implements GameField {
 	public static final int MAX_LEVEL = 100;
@@ -86,6 +87,8 @@ public class GameFieldImpl implements GameField {
 		notifyLevelChanged();
 		notifyBlocksChanged();
 		// --
+		MidiPlayer.startBackgroundMusic();
+		// --
 		try {
 			newStone();
 		} catch (InvalidActionException e) {
@@ -123,6 +126,9 @@ public class GameFieldImpl implements GameField {
 		if (checkCollision()) {
 			gameState = EGameState.GAMEOVER;
 			gameDuration = System.currentTimeMillis() - gameStart;
+			// --
+			MidiPlayer.stopBackgroundMusic();
+			// --
 			notifyGameOver();
 			return;
 		}

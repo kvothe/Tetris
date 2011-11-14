@@ -43,9 +43,9 @@ public class Controller implements GameDataChangedListener {
 			public void run() {
 				try {
 					while (!signalAbort) {
-						gamefield.moveStoneDown();
-						// --
 						Thread.sleep(speed);
+						// --
+						gamefield.moveStoneDown();
 					}
 				} catch (InterruptedException e) {
 					// ignore

@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import jku.se.tetris.control.Controller;
 import jku.se.tetris.model.GameField;
+import jku.se.tetris.sound.MidiPlayer;
 
 public class MenuProvider {
 
@@ -84,11 +85,23 @@ public class MenuProvider {
 		JMenuItem itemRegister = new JMenuItem("Register...");
 		menuUser.add(itemRegister);
 
+		//
+		// Audio
+		//
+		JMenu menuAudio = new JMenu("Audio");
+		menuBar.add(menuAudio);
+		// --
+		JMenuItem itemAudioStart = new JMenuItem("Play Music");
+		menuAudio.add(itemAudioStart);
+		// --
+		JMenuItem itemAudioStop = new JMenuItem("Stop Music");
+		menuAudio.add(itemAudioStop);
+
 		// MenuItem: Game -> Start
 		itemStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.start();
+				controller.start();			
 			}
 		});
 		// MenuItem: Game -> Pause
@@ -98,7 +111,7 @@ public class MenuProvider {
 				controller.pause();
 			}
 		});
-		// MenuItem: Game -> Pause
+		// MenuItem: Game -> Resume
 		itemResume.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -110,6 +123,10 @@ public class MenuProvider {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.stop();
+				// --
+				MidiPlayer.stopBackgroundMusic();
+				MidiPlayer.teardown();
+				// --
 				frame.dispose();
 			}
 		});
@@ -143,6 +160,22 @@ public class MenuProvider {
 			public void actionPerformed(ActionEvent e) {
 				RegisterDialog dialog = new RegisterDialog(frame);
 				dialog.open();
+			}
+		});
+
+		// MenuItem: Audio -> Play Music
+		itemAudioStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MidiPlayer.startBackgroundMusic();
+			}
+		});
+
+		// MenuItem: Audio -> Play Music
+		itemAudioStop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MidiPlayer.stopBackgroundMusic();
 			}
 		});
 	}
