@@ -109,7 +109,7 @@ public class RegisterDialog extends JDialog {
 				} else {
 					String errorMessage = "Sorry, this username is already taken.";
 					// --
-					if (passwort.length() < 8) {
+					if (passwort.length() <= 8) {
 						errorMessage = "The password you entered does not meet the security standards (minimum of 8 characters).";
 					} else if (!passwort.equalsIgnoreCase(passwortwieder)) {
 						errorMessage = "The password confirmation does not match.";
