@@ -251,8 +251,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 14;
-	static final int noSym = 14;
+	static final int maxT = 13;
+	static final int noSym = 13;
 
 
 	public Buffer buffer; // scanner buffer
@@ -280,17 +280,16 @@ public class Scanner {
 		for (int i = 48; i <= 57; ++i) start.set(i, 4);
 		for (int i = 65; i <= 90; ++i) start.set(i, 3);
 		for (int i = 97; i <= 122; ++i) start.set(i, 3);
-		start.set(46, 5); 
-		start.set(35, 6); 
+		start.set(35, 5); 
+		start.set(46, 6); 
 		start.set(64, 7); 
 		start.set(58, 8); 
 		start.set(Buffer.EOF, -1);
 		literals.put("TetrisStatistics", new Integer(4));
-		literals.put("Build", new Integer(5));
-		literals.put("PC", new Integer(10));
-		literals.put("Android", new Integer(11));
-		literals.put("iPhone", new Integer(12));
-		literals.put("Playstation", new Integer(13));
+		literals.put("PC", new Integer(9));
+		literals.put("Android", new Integer(10));
+		literals.put("iPhone", new Integer(11));
+		literals.put("Playstation", new Integer(12));
 
 	}
 	
@@ -423,13 +422,13 @@ public class Scanner {
 					else if (ch == ',') {AddCh(); state = 1; break;}
 					else {t.kind = 1; break loop;}
 				case 5:
-					{t.kind = 6; break loop;}
+					{t.kind = 5; break loop;}
 				case 6:
-					{t.kind = 7; break loop;}
+					{t.kind = 6; break loop;}
 				case 7:
-					{t.kind = 8; break loop;}
+					{t.kind = 7; break loop;}
 				case 8:
-					{t.kind = 9; break loop;}
+					{t.kind = 8; break loop;}
 
 			}
 		}

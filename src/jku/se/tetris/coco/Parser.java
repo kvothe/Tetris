@@ -5,7 +5,7 @@ public class Parser {
 	public static final int _integer = 1;
 	public static final int _float = 2;
 	public static final int _word = 3;
-	public static final int maxT = 14;
+	public static final int maxT = 13;
 
 	static final boolean T = true;
 	static final boolean x = false;
@@ -81,9 +81,9 @@ public class Parser {
 	void TetrisStatistics() {
 		int gameCount = 0; int sumScore = 0; String bestPlayer = ""; int maxScore = 0; String pName = "Max Mustermann"; int pScore = 0; 
 		Expect(4);
-		Expect(5);
-		Expect(1);
-		while (la.kind == 7) {
+		Date();
+		Time();
+		while (la.kind == 5) {
 			String player; int score = 0; 
 			player = Entry();
 			gameCount++;
@@ -109,6 +109,7 @@ public class Parser {
 			}
 			
 		}
+		if (errors.count == 0) {
 		System.out.println("Tetris Statistics");
 		System.out.println();
 		System.out.println("Games Played:\t" + gameCount); 
@@ -116,7 +117,40 @@ public class Parser {
 		System.out.println("Best Player:\t" + bestPlayer);
 		System.out.println("---");
 		System.out.println("Highest Score of '" + pName + "': " + pScore);
-		System.out.println(); 	
+		System.out.println();
+		} else {
+			System.out.println("-- aborted because " + errors.count + " error" + (errors.count == 1 ? "" : "s") + " occured");
+		}
+		
+	}
+
+	void Date() {
+		int day, month, year = 0; 
+		day = Day();
+		Expect(6);
+		month = Month();
+		Expect(6);
+		year = Year();
+		if (day < 1 || month < 1 || year < 1970) {
+		SemErr("invalid date");
+		} else if (day > 31 || month > 12) {
+			SemErr("invalid date");
+		}
+		
+	}
+
+	void Time() {
+		int hour, minute, second = 0; 
+		hour = Hour();
+		Expect(8);
+		minute = Minute();
+		Expect(8);
+		second = Second();
+		if (hour < 0 || minute < 0 || second < 0) {
+		SemErr("invalid time");
+		} else if (hour > 23 || minute > 59 || second > 59) {
+			SemErr("invalid time");
+		}
 		
 	}
 
@@ -128,11 +162,10 @@ public class Parser {
 		Date();
 		Time();
 		score = Score();
-		if (la.kind == 7) {
+		if (la.kind == 5) {
 			Comment();
 		}
 		Platform();
-		Expect(6);
 		player = name + "#" + score; // Java does not support multiple return values -> use concatenated string as workaround 
 		
 		return player;
@@ -140,14 +173,14 @@ public class Parser {
 
 	String  Name() {
 		String  name;
-		Expect(7);
+		Expect(5);
 		Expect(3);
 		name = t.val; 
 		while (la.kind == 3) {
 			Get();
 			name += " " + t.val; 
 		}
-		Expect(7);
+		Expect(5);
 		return name;
 	}
 
@@ -157,26 +190,10 @@ public class Parser {
 			Get();
 			Expect(3);
 		}
-		Expect(8);
+		Expect(7);
 		Expect(3);
 		Expect(6);
 		Expect(3);
-	}
-
-	void Date() {
-		Day();
-		Expect(6);
-		Month();
-		Expect(6);
-		Year();
-	}
-
-	void Time() {
-		Hour();
-		Expect(9);
-		Minute();
-		Expect(9);
-		Second();
 	}
 
 	int  Score() {
@@ -187,83 +204,65 @@ public class Parser {
 	}
 
 	void Comment() {
-		Expect(7);
+		Expect(5);
 		while (la.kind == 3) {
 			Get();
 		}
-		Expect(7);
+		Expect(5);
 	}
 
 	void Platform() {
-		if (la.kind == 10) {
+		if (la.kind == 9) {
+			Get();
+		} else if (la.kind == 10) {
 			Get();
 		} else if (la.kind == 11) {
 			Get();
 		} else if (la.kind == 12) {
 			Get();
-		} else if (la.kind == 13) {
-			Get();
-		} else SynErr(15);
+		} else SynErr(14);
 	}
 
-	void Day() {
+	int  Day() {
+		int  day;
 		Expect(1);
-		int day = Integer.parseInt(t.val);
-		// --
-		if (day < 0 || day > 31) {
-			SemErr("invalid day");
-		}	
-		
+		day = Integer.parseInt(t.val); 
+		return day;
 	}
 
-	void Month() {
+	int  Month() {
+		int  month;
 		Expect(1);
-		int month = Integer.parseInt(t.val);
-		// --
-		if (month < 0 || month > 12) {
-			SemErr("invalid month");
-		}	
-		
+		month = Integer.parseInt(t.val); 
+		return month;
 	}
 
-	void Year() {
+	int  Year() {
+		int  year;
 		Expect(1);
-		int year = Integer.parseInt(t.val);
-		// --
-		if (year < 1970) {
-			SemErr("invalid year");
-		}	
-		
+		year = Integer.parseInt(t.val); 
+		return year;
 	}
 
-	void Hour() {
+	int  Hour() {
+		int  hour;
 		Expect(1);
-		int hour = Integer.parseInt(t.val);
-		// --		
-		if (hour < 0 || hour > 23) {
-			SemErr("invalid hour");									
-		}	
-		
+		hour = Integer.parseInt(t.val); 
+		return hour;
 	}
 
-	void Minute() {
+	int  Minute() {
+		int  minute;
 		Expect(1);
-		int minute = Integer.parseInt(t.val);
-		// --
-		if (minute < 0 || minute > 59) {
-			SemErr("invalid minute");
-		}	
-		
+		minute = Integer.parseInt(t.val); 
+		return minute;
 	}
 
-	void Second() {
+	int  Second() {
+		int  second;
 		Expect(1);
-		int second = Integer.parseInt(t.val);
-		// --
-		if (second < 0 || second > 59) {
-			SemErr("invalid second");
-		}	
-		
+		second = Integer.parseInt(t.val); 
+		return second;
 	}
 
 
@@ -278,7 +277,7 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x}
+		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x}
 
 	};
 } // end Parser
@@ -308,17 +307,16 @@ class Errors {
 			case 2: s = "float expected"; break;
 			case 3: s = "word expected"; break;
 			case 4: s = "\"TetrisStatistics\" expected"; break;
-			case 5: s = "\"Build\" expected"; break;
+			case 5: s = "\"#\" expected"; break;
 			case 6: s = "\".\" expected"; break;
-			case 7: s = "\"#\" expected"; break;
-			case 8: s = "\"@\" expected"; break;
-			case 9: s = "\":\" expected"; break;
-			case 10: s = "\"PC\" expected"; break;
-			case 11: s = "\"Android\" expected"; break;
-			case 12: s = "\"iPhone\" expected"; break;
-			case 13: s = "\"Playstation\" expected"; break;
-			case 14: s = "??? expected"; break;
-			case 15: s = "invalid Platform"; break;
+			case 7: s = "\"@\" expected"; break;
+			case 8: s = "\":\" expected"; break;
+			case 9: s = "\"PC\" expected"; break;
+			case 10: s = "\"Android\" expected"; break;
+			case 11: s = "\"iPhone\" expected"; break;
+			case 12: s = "\"Playstation\" expected"; break;
+			case 13: s = "??? expected"; break;
+			case 14: s = "invalid Platform"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);

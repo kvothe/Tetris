@@ -30,7 +30,7 @@ IGNORE '\r' + '\n' + '\t'
 PRODUCTIONS
 
 TetrisStatistics (. int gameCount = 0; int sumScore = 0; String bestPlayer = ""; int maxScore = 0; String pName = "Max Mustermann"; int pScore = 0; .)
- = "TetrisStatistics" "Build" integer 
+ = "TetrisStatistics" Date Time
  { 
  	(. String player; int score = 0; .)
  	Entry<^player> 
@@ -61,19 +61,23 @@ TetrisStatistics (. int gameCount = 0; int sumScore = 0; String bestPlayer = "";
  	.) 
  }
  (. 
- 	System.out.println("Tetris Statistics");
- 	System.out.println();
- 	System.out.println("Games Played:\t" + gameCount); 
- 	System.out.println("Average Score:\t" + (float)sumScore / gameCount);
- 	System.out.println("Best Player:\t" + bestPlayer);
- 	System.out.println("---");
- 	System.out.println("Highest Score of '" + pName + "': " + pScore);
- 	System.out.println(); 	
+ 	if (errors.count == 0) {
+	 	System.out.println("Tetris Statistics");
+	 	System.out.println();
+	 	System.out.println("Games Played:\t" + gameCount); 
+	 	System.out.println("Average Score:\t" + (float)sumScore / gameCount);
+	 	System.out.println("Best Player:\t" + bestPlayer);
+	 	System.out.println("---");
+	 	System.out.println("Highest Score of '" + pName + "': " + pScore);
+	 	System.out.println();
+ 	} else {
+ 		System.out.println("-- aborted because " + errors.count + " error" + (errors.count == 1 ? "" : "s") + " occured");
+ 	}
  .) 
  .
 
 Entry <^String player> (. String name; int score = 0; .) = 
-	Name<^name> Mail Date Time Score<^score> [ Comment ] Platform "."	
+	Name<^name> Mail Date Time Score<^score> [ Comment ] Platform	
 	(. 
 		player = name + "#" + score; // Java does not support multiple return values -> use concatenated string as workaround 
 	.)
@@ -87,155 +91,43 @@ Name<^String name> =
 
 Mail = word { "." word } "@" word "." word .
 
-Date = Day "." Month "." Year .
+Date (. int day, month, year = 0; .) = 
+	Day<^day> "." Month<^month> "." Year<^year> 
+	(.
+		if (day < 1 || month < 1 || year < 1970) {
+			SemErr("invalid date");
+		} else if (day > 31 || month > 12) {
+			SemErr("invalid date");
+		}
+	.) .
 
-Day = integer
+Day<^int day> = integer (. day = Integer.parseInt(t.val); .) .
+
+Month<^int month> = integer (. month = Integer.parseInt(t.val); .) .
+
+Year<^int year> = integer (. year = Integer.parseInt(t.val); .) .
+
+Time (. int hour, minute, second = 0; .) = 
+	Hour<^hour> ":" Minute<^minute> ":" Second<^second>
 	(. 
-		int day = Integer.parseInt(t.val);
-		// --
-		if (day < 0 || day > 31) {
-			SemErr("invalid day");
-		}	
-	.)
-	.
+		if (hour < 0 || minute < 0 || second < 0) {
+			SemErr("invalid time");
+		} else if (hour > 23 || minute > 59 || second > 59) {
+			SemErr("invalid time");
+		}
+	.) .
 
-Month = integer
-	(. 
-		int month = Integer.parseInt(t.val);
-		// --
-		if (month < 0 || month > 12) {
-			SemErr("invalid month");
-		}	
-	.)
-	.
-
-Year = integer
-	(. 
-		int year = Integer.parseInt(t.val);
-		// --
-		if (year < 1970) {
-			SemErr("invalid year");
-		}	
-	.)
-	.
-
-Time = Hour ":" Minute ":" Second .
-
-Hour = integer
-	(. 
-		int hour = Integer.parseInt(t.val);
-		// --		
-		if (hour < 0 || hour > 23) {
-			SemErr("invalid hour");									
-		}	
-	.)
-	.
+Hour<^int hour> = integer (. hour = Integer.parseInt(t.val); .) .
 	
-Minute = integer
-(. 
-	int minute = Integer.parseInt(t.val);
-	// --
-	if (minute < 0 || minute > 59) {
-		SemErr("invalid minute");
-	}	
-.)
-.
+Minute<^int minute> = integer (. minute = Integer.parseInt(t.val); .) .
 
-Second = integer
-(. 
-	int second = Integer.parseInt(t.val);
-	// --
-	if (second < 0 || second > 59) {
-		SemErr("invalid second");
-	}	
-.)
-.
+Second<^int second> = integer (. second = Integer.parseInt(t.val); .) .
 
-Score<^int score> = 
-	integer (. score = Integer.parseInt(t.val); .) 
-	.
+Score<^int score> = integer (. score = Integer.parseInt(t.val); .) .
 
 Comment = "#" { word } "#" .
 
 Platform = "PC" | "Android" | "iPhone" | "Playstation" .
-
-/*----
-
-Messdatei =           (. String name="M_01"; float maxWert = 0; float wert = 0; .)
-	Eintrag<^wert, name, maxWert> "." (. maxWert = wert; .)
-	{
-		Eintrag<^wert, name, maxWert> (. maxWert = wert; .)
-		"." 
-	} (. System.out.println("Maximalwert von " + name + ": " + maxWert); .)
-	.
-	
-	
-Eintrag<^float wert, String name, float maxWert> = (. wert = 0; String nummer; float aktWert; boolean datumValid; .)
-	Messstation<^nummer> (. String aktName = "M_" + nummer; .)
-	Datum<^datumValid>
-	[Uhrzeit]
-	Messwert<^aktWert> (. if (aktName.equals(name) && aktWert > maxWert && datumValid ) {
-				wert = aktWert; 
-			      }	   
-			      else {
-			      	wert = maxWert;
-			      }
-			   
-			   .)
-	. 
-	
-
-Datum<^boolean datumValid> = (. datumValid = true; int tag = -1; int monat = -1; .)
-	Tag<^tag> (. if (tag < 1 || tag > 31) datumValid = false; .)
-	"."
-	Monat<^monat> (. if (monat < 1 || monat > 12) datumValid = false; .)
-	"."
-	Jahr
-	.
-
-
-Tag <^int tag> =
-	integer (. tag = Integer.parseInt(t.val); .)
-	.
-	
-
-Monat<^int monat> =
-	integer (. monat = Integer.parseInt(t.val); .)
-	.
-	
-
-Jahr =
-	integer
-	.
-	
-
-Uhrzeit =
-	Stunde
-	":"
-	Minute
-	.
-
-
-Stunde =
-	integer
-	.
-	
-
-Minute =
-	integer
-	.
-
-
-Messstation <^String nummer> =
-	"M_"
-	integer (. nummer = t.val; .)
-	.
-
-
-Messwert<^float aktWert> =
-	float (. String s = t.val.replace(',', '.'); aktWert = Float.valueOf(s).floatValue(); .)
-	.
-	*/
 
 /*----------------------------------------------------------*/
 
