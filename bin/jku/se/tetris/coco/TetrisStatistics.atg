@@ -1,0 +1,246 @@
+/*----------------------------------------------------------
+  --- DATEI: TetrisStatistics.ATG
+  --- INHALT: Grammatik für Tetris Spielstatistiken inklusive Auswertungen
+  --- AUTOR: Markus Hofmarcher, 28.11.2011
+  ----------------------------------------------------------*/
+
+COMPILER TetrisStatistics
+
+/*----------------------------------------------------------
+  --- SCANNER
+  ----------------------------------------------------------*/
+
+CHARACTERS
+   char 	=   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" .
+   digit    =   "0123456789" .
+
+TOKENS   
+   integer  = digit {digit} .
+   float	= digit {digit} "," digit .
+   word		= char {char} .
+   
+COMMENTS FROM "/*" TO "*/" NESTED
+
+IGNORE '\r' + '\n' + '\t'
+
+/*----------------------------------------------------------
+  --- PARSER
+  ----------------------------------------------------------*/
+
+PRODUCTIONS
+
+TetrisStatistics (. int gameCount = 0; int sumScore = 0; String bestPlayer = ""; int maxScore = 0; String pName = "Max Mustermann"; int pScore = 0; .)
+ = "TetrisStatistics" "Build" integer 
+ { 
+ 	(. String player; int score = 0; .)
+ 	Entry<^player> 
+ 	(. 
+ 		// Games Played
+ 		gameCount++;
+ 		
+ 		// Java does not support multiple return values -> use concatenated string as workaround
+ 		int delPos = player.indexOf("#");
+ 		score = Integer.parseInt(player.substring(delPos + 1));
+ 		player = player.substring(0, delPos);
+ 		
+ 		// Sum Score
+ 		sumScore += score;
+ 		
+ 		// Best Player
+ 		if (score > maxScore) {
+ 			maxScore = score;
+ 			bestPlayer = player;
+ 		}
+ 		
+ 		// Highest Score of specified player
+ 		if (player.equals(pName)) {
+ 			if (score > pScore) {
+ 				pScore = score;
+ 			}
+ 		}
+ 	.) 
+ }
+ (. 
+ 	System.out.println("Games Played:\t" + gameCount); 
+ 	System.out.println("Average Score:\t" + (float)sumScore / gameCount);
+ 	System.out.println("Best Player:\t" + bestPlayer);
+ 	System.out.println("---");
+ 	System.out.println("Highest Score of '" + pName + "': " + pScore);
+ 	System.out.println(); 	
+ .) 
+ .
+
+Entry <^String player> (. String name; int score = 0; .) = 
+	Name<^name> Mail Date Time Score<^score> [ Comment ] Platform "."	
+	(. 
+		player = name + "#" + score; // Java does not support multiple return values -> use concatenated string as workaround 
+	.)
+	.
+
+Name<^String name> = 
+	"#" 
+	word (. name = t.val; .) 
+	{ word (. name += " " + t.val; .) } 
+	"#" .
+
+Mail = word { "." word } "@" word "." word .
+
+Date = Day "." Month "." Year .
+
+Day = integer
+	(. 
+		int day = Integer.parseInt(t.val);
+		// --
+		if (day < 0 || day > 31) {
+			SemErr("invalid day");
+		}	
+	.)
+	.
+
+Month = integer
+	(. 
+		int month = Integer.parseInt(t.val);
+		// --
+		if (month < 0 || month > 12) {
+			SemErr("invalid month");
+		}	
+	.)
+	.
+
+Year = integer
+	(. 
+		int year = Integer.parseInt(t.val);
+		// --
+		if (year < 1970) {
+			SemErr("invalid year");
+		}	
+	.)
+	.
+
+Time = Hour ":" Minute ":" Second .
+
+Hour = integer
+	(. 
+		int hour = Integer.parseInt(t.val);
+		// --		
+		if (hour < 0 || hour > 23) {
+			SemErr("invalid hour");									
+		}	
+	.)
+	.
+	
+Minute = integer
+(. 
+	int minute = Integer.parseInt(t.val);
+	// --
+	if (minute < 0 || minute > 59) {
+		SemErr("invalid minute");
+	}	
+.)
+.
+
+Second = integer
+(. 
+	int second = Integer.parseInt(t.val);
+	// --
+	if (second < 0 || second > 59) {
+		SemErr("invalid second");
+	}	
+.)
+.
+
+Score<^int score> = 
+	integer (. score = Integer.parseInt(t.val); .) 
+	.
+
+Comment = "#" { word } "#" .
+
+Platform = "PC" | "Android" | "iPhone" | "Playstation" .
+
+/*----
+Monat<^int monat> =
+	integer (. monat = Integer.parseInt(t.val); .)
+	.
+Messstation <^String nummer> =
+	"M_"
+	integer (. nummer = t.val; .)
+
+TetrisStatistics =           (. String name="M_01"; float maxWert = 0; float wert = 0; .)
+	Eintrag<^wert, name, maxWert> "." (. maxWert = wert; .)
+	{
+		Eintrag<^wert, name, maxWert> (. maxWert = wert; .)
+		"." 
+	} (. System.out.println("Maximalwert von " + name + ": " + maxWert); .)
+	.
+	
+	
+Eintrag<^float wert, String name, float maxWert> = (. wert = 0; String nummer; float aktWert; boolean datumValid; .)
+	Messstation<^nummer> (. String aktName = "M_" + nummer; .)
+	Datum<^datumValid>
+	[Uhrzeit]
+	Messwert<^aktWert> (. if (aktName.equals(name) && aktWert > maxWert && datumValid ) {
+				wert = aktWert; 
+			      }	   
+			      else {
+			      	wert = maxWert;
+			      }
+			   
+			   .)
+	. 
+	
+
+Datum<^boolean datumValid> = (. datumValid = true; int tag = -1; int monat = -1; .)
+	Tag<^tag> (. if (tag < 1 || tag > 31) datumValid = false; .)
+	"."
+	Monat<^monat> (. if (monat < 1 || monat > 12) datumValid = false; .)
+	"."
+	Jahr
+	.
+
+
+Tag <^int tag> =
+	integer (. tag = Integer.parseInt(t.val); .)
+	.
+	
+
+Monat<^int monat> =
+	integer (. monat = Integer.parseInt(t.val); .)
+	.
+	
+
+Jahr =
+	integer
+	.
+	
+
+Uhrzeit =
+	Stunde
+	":"
+	Minute
+	.
+
+
+Stunde =
+	integer
+	.
+	
+
+Minute =
+	integer
+	.
+
+
+Messstation <^String nummer> =
+	"M_"
+	integer (. nummer = t.val; .)
+	.
+
+
+Messwert<^float aktWert> =
+	float (. String s = t.val.replace(',', '.'); aktWert = Float.valueOf(s).floatValue(); .)
+	.
+	*/
+
+/*----------------------------------------------------------*/
+
+END TetrisStatistics .

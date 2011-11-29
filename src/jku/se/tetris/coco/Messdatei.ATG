@@ -1,0 +1,110 @@
+/*----------------------------------------------------------
+  --- DATEI: Messdatei.ATG
+  --- INHAL: Ermittelt den maximalwert einer Messstation. 
+  --- AUTOR: AW, 19.11.2007
+  ----------------------------------------------------------*/
+
+COMPILER Messdatei
+
+/*----------------------------------------------------------
+  --- SCANNER
+  ----------------------------------------------------------*/
+
+CHARACTERS
+   buchstabe =   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" .
+   ziffer    =   "0123456789" .
+
+TOKENS
+   ganzzahl      =   ziffer [ziffer] .
+   kommazahl	 = ziffer {ziffer} "," ziffer .
+   
+COMMENTS FROM "/*" TO "*/" NESTED
+
+IGNORE '\r' + '\n' + '\t'
+
+/*----------------------------------------------------------
+  --- PARSER
+  ----------------------------------------------------------*/
+
+PRODUCTIONS
+
+/*----*/
+Messdatei =           (. String name="M_01"; float maxWert = 0; float wert = 0; .)
+	Eintrag<^wert, name, maxWert> "." (. maxWert = wert; .)
+	{
+		Eintrag<^wert, name, maxWert> (. maxWert = wert; .)
+		"." 
+	} (. System.out.println("Maximalwert von " + name + ": " + maxWert); .)
+	.
+	
+/*----*/	
+Eintrag<^float wert, String name, float maxWert> = (. wert = 0; String nummer; float aktWert; boolean datumValid; .)
+	Messstation<^nummer> (. String aktName = "M_" + nummer; .)
+	Datum<^datumValid>
+	[Uhrzeit]
+	Messwert<^aktWert> (. if (aktName.equals(name) && aktWert > maxWert && datumValid ) {
+				wert = aktWert; 
+			      }	   
+			      else {
+			      	wert = maxWert;
+			      }
+			   
+			   .)
+	. 
+	
+/*----*/
+Datum<^boolean datumValid> = (. datumValid = true; int tag = -1; int monat = -1; .)
+	Tag<^tag> (. if (tag < 1 || tag > 31) datumValid = false; .)
+	"."
+	Monat<^monat> (. if (monat < 1 || monat > 12) datumValid = false; .)
+	"."
+	Jahr
+	.
+
+/*----*/
+Tag <^int tag> =
+	ganzzahl (. tag = Integer.parseInt(t.val); .)
+	.
+	
+/*----*/
+Monat<^int monat> =
+	ganzzahl (. monat = Integer.parseInt(t.val); .)
+	.
+	
+/*----*/
+Jahr =
+	ganzzahl
+	.
+	
+/*----*/
+Uhrzeit =
+	Stunde
+	":"
+	Minute
+	.
+
+/*----*/
+Stunde =
+	ganzzahl
+	.
+	
+/*----*/
+Minute =
+	ganzzahl
+	.
+
+/*----*/
+Messstation <^String nummer> =
+	"M_"
+	ganzzahl (. nummer = t.val; .)
+	.
+
+/*----*/
+Messwert<^float aktWert> =
+	kommazahl (. String s = t.val.replace(',', '.'); aktWert = Float.valueOf(s).floatValue(); .)
+	.
+	
+
+/*----------------------------------------------------------*/
+
+END Messdatei .
