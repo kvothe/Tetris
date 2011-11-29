@@ -109,6 +109,8 @@ public class Parser {
 			}
 			
 		}
+		System.out.println("Tetris Statistics");
+		System.out.println();
 		System.out.println("Games Played:\t" + gameCount); 
 		System.out.println("Average Score:\t" + (float)sumScore / gameCount);
 		System.out.println("Best Player:\t" + bestPlayer);

@@ -61,6 +61,8 @@ TetrisStatistics (. int gameCount = 0; int sumScore = 0; String bestPlayer = "";
  	.) 
  }
  (. 
+ 	System.out.println("Tetris Statistics");
+ 	System.out.println();
  	System.out.println("Games Played:\t" + gameCount); 
  	System.out.println("Average Score:\t" + (float)sumScore / gameCount);
  	System.out.println("Best Player:\t" + bestPlayer);
@@ -158,14 +160,8 @@ Comment = "#" { word } "#" .
 Platform = "PC" | "Android" | "iPhone" | "Playstation" .
 
 /*----
-Monat<^int monat> =
-	integer (. monat = Integer.parseInt(t.val); .)
-	.
-Messstation <^String nummer> =
-	"M_"
-	integer (. nummer = t.val; .)
 
-TetrisStatistics =           (. String name="M_01"; float maxWert = 0; float wert = 0; .)
+Messdatei =           (. String name="M_01"; float maxWert = 0; float wert = 0; .)
 	Eintrag<^wert, name, maxWert> "." (. maxWert = wert; .)
 	{
 		Eintrag<^wert, name, maxWert> (. maxWert = wert; .)

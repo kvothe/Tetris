@@ -1,4 +1,6 @@
 TetrisStatistics Build 1
-#Max Mustermann# this@is.mail 41.45.2011 25:63:65 6 # Dies ist ein Comment # PC.
-#Nina Mustermann# this@is.mail 12.05.2011 21:03:04 9 # Dies ist ein Comment # PC.
-#Karl Mustermann# this@is.mail 12.05.2011 21:03:04 12 # Dies ist ein Comment # PC.
+#Max Mustermann# this@is.mail 21.11.2011 23:02:34 6 # Dies ist ein Comment # PC.
+#Max Mustermann# this@is.mail 21.11.2011 23:04:11 4 # Dies ist ein Comment # PC.
+#Max Mustermann# this@is.mail 21.11.2011 23:07:48 33 # Dies ist ein Comment # PC.
+#Nina Mustermann# this@is.mail 12.05.2011 21:03:04 9 # Dies ist ein Comment # iPhone.
+#Karl Mustermann# this@is.mail 12.05.2011 21:03:04 12 # Dies ist ein Comment # Android.
