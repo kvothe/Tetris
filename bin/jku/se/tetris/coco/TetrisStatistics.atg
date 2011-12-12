@@ -29,39 +29,50 @@ IGNORE '\r' + '\n' + '\t'
 
 PRODUCTIONS
 
-TetrisStatistics (. int gameCount = 0; int sumScore = 0; String bestPlayer = ""; int maxScore = 0; String pName = "Max Mustermann"; int pScore = 0; .)
- = "TetrisStatistics" Date Time
+TetrisStatistics 
+ (. 
+ 	int gameCount = 0, sumScore = 0, maxScore = 0, pScore = 0, fileErrors = 0; 
+ 	boolean dateValid = false, timeValid = false; 	
+ 	String bestPlayer = "", pName = "Max Mustermann"; 	
+ .)
+ = "TetrisStatistics" Date<^dateValid> Time<^timeValid>
  { 
- 	(. String player; int score = 0; .)
- 	Entry<^player> 
+ 	(. String entry; .)
+ 	Entry<^entry> 
  	(. 
  		// Games Played
  		gameCount++;
  		
  		// Java does not support multiple return values -> use concatenated string as workaround
- 		int delPos = player.indexOf("#");
- 		score = Integer.parseInt(player.substring(delPos + 1));
- 		player = player.substring(0, delPos);
- 		
- 		// Sum Score
- 		sumScore += score;
- 		
- 		// Best Player
- 		if (score > maxScore) {
- 			maxScore = score;
- 			bestPlayer = player;
- 		}
- 		
- 		// Highest Score of specified player
- 		if (player.equals(pName)) {
- 			if (score > pScore) {
- 				pScore = score;
- 			}
+ 		if (entry != null) { 		
+	 		int delPos = entry.indexOf("#");
+	 		int score = Integer.parseInt(entry.substring(delPos + 1));
+	 		String player = entry.substring(0, delPos);
+	 		
+	 		// Sum Score
+	 		sumScore += score;
+	 		
+	 		// Best Player
+	 		if (score > maxScore) {
+	 			maxScore = score;
+	 			bestPlayer = player;
+	 		}
+	 		
+	 		// Highest Score of specified player
+	 		if (player.equals(pName)) {
+	 			if (score > pScore) {
+	 				pScore = score;
+	 			}
+	 		}
+ 		} else {
+ 			fileErrors++;
  		}
  	.) 
  }
  (. 
- 	if (errors.count == 0) {
+ 	if (!dateValid || !timeValid) {
+ 		System.out.println("-- aborted because the file header is invalid");
+ 	} else if (fileErrors == 0) {
 	 	System.out.println("Tetris Statistics");
 	 	System.out.println();
 	 	System.out.println("Games Played:\t" + gameCount); 
@@ -71,15 +82,20 @@ TetrisStatistics (. int gameCount = 0; int sumScore = 0; String bestPlayer = "";
 	 	System.out.println("Highest Score of '" + pName + "': " + pScore);
 	 	System.out.println();
  	} else {
- 		System.out.println("-- aborted because " + errors.count + " error" + (errors.count == 1 ? "" : "s") + " occured");
+ 		System.out.println("-- aborted because " + fileErrors + " entr" + (fileErrors == 1 ? "y is" : "ies are") + " invalid");
  	}
  .) 
  .
 
-Entry <^String player> (. String name; int score = 0; .) = 
-	Name<^name> Mail Date Time Score<^score> [ Comment ] Platform	
-	(. 
-		player = name + "#" + score; // Java does not support multiple return values -> use concatenated string as workaround 
+Entry <^String entry> (. String name; int score = 0; boolean validDate=false; boolean validTime = false; .) = 
+	Name<^name> Mail Date<^validDate> Time<^validTime> Score<^score> [ Comment ] Platform	
+	(. 		
+		// Java does not support multiple return values -> use concatenated string as workaround		
+		if (validDate && validTime) {
+			entry = name + "#" + score; 
+		} else {
+			entry = null;
+		}
 	.)
 	.
 
@@ -91,14 +107,12 @@ Name<^String name> =
 
 Mail = word { "." word } "@" word "." word .
 
-Date (. int day, month, year = 0; .) = 
+Date<^boolean valid> (. int day, month, year = 0; .) = 
 	Day<^day> "." Month<^month> "." Year<^year> 
 	(.
-		if (day < 1 || month < 1 || year < 1970) {
-			SemErr("invalid date");
-		} else if (day > 31 || month > 12) {
-			SemErr("invalid date");
-		}
+		valid = day >= 1 && day <= 31;
+		valid = valid && month >= 1 && month <= 12;
+		valid = valid && year >= 1970;		
 	.) .
 
 Day<^int day> = integer (. day = Integer.parseInt(t.val); .) .
@@ -107,14 +121,12 @@ Month<^int month> = integer (. month = Integer.parseInt(t.val); .) .
 
 Year<^int year> = integer (. year = Integer.parseInt(t.val); .) .
 
-Time (. int hour, minute, second = 0; .) = 
+Time<^boolean valid> (. int hour, minute, second = 0; .) = 
 	Hour<^hour> ":" Minute<^minute> ":" Second<^second>
 	(. 
-		if (hour < 0 || minute < 0 || second < 0) {
-			SemErr("invalid time");
-		} else if (hour > 23 || minute > 59 || second > 59) {
-			SemErr("invalid time");
-		}
+		valid = hour >= 0 && hour < 24;
+		valid = valid && minute >= 0 && minute < 60;
+		valid = valid && second >= 0 && second < 60;		
 	.) .
 
 Hour<^int hour> = integer (. hour = Integer.parseInt(t.val); .) .

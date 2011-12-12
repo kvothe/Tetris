@@ -1,4 +1,4 @@
-package jku.se.tetris.coco;
+package bin.jku.se.tetris.coco;
 
 public class Parser {
 	public static final int _EOF = 0;
@@ -117,7 +117,7 @@ public class Parser {
 			
 		}
 		if (!dateValid || !timeValid) {
-		System.out.println("-- aborted because the file header is invalid");
+		System.out.println("-- aborted because the header is invalid");
 		} else if (fileErrors == 0) {
 			System.out.println("Tetris Statistics");
 			System.out.println();
