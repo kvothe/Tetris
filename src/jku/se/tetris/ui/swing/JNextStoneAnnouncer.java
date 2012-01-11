@@ -10,7 +10,7 @@ import jku.se.tetris.model.Block;
 import jku.se.tetris.model.GameDataChangedListener;
 import jku.se.tetris.model.GameFieldChangedListener;
 import jku.se.tetris.model.GraphicsProviderRegistry;
-import jku.se.tetris.model.Stone;
+import jku.se.tetris.model.stones.Stone;
 
 public class JNextStoneAnnouncer extends JComponent implements GameFieldChangedListener, GameDataChangedListener {
 	private static final long serialVersionUID = 7422689163766554747L;

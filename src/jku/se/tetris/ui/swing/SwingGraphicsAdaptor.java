@@ -13,7 +13,7 @@ import java.awt.Stroke;
 import jku.se.tetris.model.Block;
 import jku.se.tetris.model.GraphicsAdaptor;
 import jku.se.tetris.model.GraphicsProviderRegistry;
-import jku.se.tetris.model.Stone;
+import jku.se.tetris.model.stones.Stone;
 
 public class SwingGraphicsAdaptor implements GraphicsAdaptor {
 	private int blocksize;

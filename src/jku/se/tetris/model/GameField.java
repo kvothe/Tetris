@@ -1,6 +1,7 @@
 package jku.se.tetris.model;
 
 import jku.se.tetris.model.exception.InvalidActionException;
+import jku.se.tetris.model.stones.Stone;
 
 public interface GameField {
 	public void newGame();

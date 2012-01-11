@@ -1,6 +1,6 @@
 TetrisStatistics 31.12.2011 23:02:34
-#Max Mustermann# this@is.mail 31.11.2011 23:02:34 6 # Dies ist ein Comment # PC
-#Max Mustermann# this@is.mail 21.11.2011 23:04:11 4 PC
-#Max Mustermann# this@is.mail 21.12.2011 23:07:48 33 # Dies ist ein Comment # PC
-#Nina Mustermann# this@is.mail 12.05.2011 23:03:04 9 iPhone
-#Karl Mustermann# this@is.mail 12.05.2011 21:03:04 12 # Dies ist ein Comment # Android
+#Max Mustermann# this@is.mail 11.01.2011 01:52:34 6 # Dies ist ein Comment # PC
+#Max Mustermann# this@is.mail 21.05.2011 20:04:11 4 PC
+#Max Mustermann# this@is.mail 21.06.2011 14:27:48 33 # Dies ist ein Comment # PC
+#Nina Mustermann# this@is.mail 23.08.2011 21:03:04 9 iPhone
+#Karl Mustermann# this@is.mail 12.12.2011 18:45:04 12 # Dies ist ein Comment # Android

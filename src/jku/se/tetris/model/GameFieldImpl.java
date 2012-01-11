@@ -3,6 +3,8 @@ package jku.se.tetris.model;
 import java.util.ArrayList;
 
 import jku.se.tetris.model.exception.InvalidActionException;
+import jku.se.tetris.model.stones.RandomStoneFactory;
+import jku.se.tetris.model.stones.Stone;
 import jku.se.tetris.sound.MidiPlayer;
 
 public class GameFieldImpl implements GameField {
@@ -113,10 +115,10 @@ public class GameFieldImpl implements GameField {
 		// --
 		if (nextStone != null) {
 			activeStone = nextStone;
-			nextStone = new Stone();
+			nextStone = RandomStoneFactory.getStone();
 		} else {
-			activeStone = new Stone();
-			nextStone = new Stone();
+			activeStone = RandomStoneFactory.getStone();
+			nextStone = RandomStoneFactory.getStone();
 		}
 		// --
 		int offset = activeStone.getWidth() > 1 ? -1 : 0;
