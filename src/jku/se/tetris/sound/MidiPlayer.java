@@ -5,6 +5,11 @@ import java.io.InputStream;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
 
+/**
+ * @author Markus Hofmarcher
+ * 
+ *         Basic implementation of a Midi Sequencer for background music.
+ */
 public class MidiPlayer {
 	private static Sequencer backgroundSequencer;
 
@@ -22,6 +27,9 @@ public class MidiPlayer {
 		}
 	}
 
+	/**
+	 * Start background music.
+	 */
 	public static void startBackgroundMusic() {
 		try {
 			if (backgroundSequencer != null && backgroundSequencer.isOpen() && !backgroundSequencer.isRunning()) {
@@ -32,6 +40,9 @@ public class MidiPlayer {
 		}
 	}
 
+	/**
+	 * Reset the audio loop to the beginning.
+	 */
 	public static void resetBackgroundMusic() {
 		try {
 			if (backgroundSequencer != null && backgroundSequencer.isOpen()) {
@@ -42,6 +53,9 @@ public class MidiPlayer {
 		}
 	}
 
+	/**
+	 * Stop the background music.
+	 */
 	public static void stopBackgroundMusic() {
 		try {
 			if (backgroundSequencer != null && backgroundSequencer.isOpen() && backgroundSequencer.isRunning()) {
@@ -52,6 +66,9 @@ public class MidiPlayer {
 		}
 	}
 
+	/**
+	 * Release resources.
+	 */
 	public static void teardown() {
 		try {
 			if (backgroundSequencer != null) {

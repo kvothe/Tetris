@@ -3,12 +3,24 @@ package jku.se.tetris.model;
 import java.util.ArrayList;
 
 import jku.se.tetris.model.exception.InvalidActionException;
-import jku.se.tetris.model.stones.RandomStoneFactory;
 import jku.se.tetris.model.stones.Stone;
+import jku.se.tetris.model.stones.StoneFactory;
 import jku.se.tetris.sound.MidiPlayer;
 
+/**
+ * @author Markus Hofmarcher
+ * 
+ *         Implementation of a Tetris game field model.
+ */
 public class GameFieldImpl implements GameField {
+	/**
+	 * Defines the max level.
+	 */
 	public static final int MAX_LEVEL = 100;
+
+	/**
+	 * Defines the level threshold.
+	 */
 	public static int LEVEL_THRESHOLD = 10000;
 
 	// ---------------------------------------------------------------------------
@@ -38,6 +50,7 @@ public class GameFieldImpl implements GameField {
 
 	private ArrayList<GameFieldChangedListener> fieldListeners;
 	private ArrayList<GameDataChangedListener> dataListeners;
+	private ArrayList<GameEventListener> eventListeners;
 
 	// ---------------------------------------------------------------------------
 
@@ -50,6 +63,15 @@ public class GameFieldImpl implements GameField {
 
 	// ---------------------------------------------------------------------------
 
+	/**
+	 * Create a new Tetris GameField implementation with the specified width and
+	 * height.
+	 * 
+	 * @param width
+	 *            width in blocks
+	 * @param height
+	 *            height in blocks
+	 */
 	public GameFieldImpl(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -59,14 +81,42 @@ public class GameFieldImpl implements GameField {
 		// --
 		blocks = new Block[height][width];
 		// --
-		fieldListeners = new ArrayList<GameFieldChangedListener>();
-		dataListeners = new ArrayList<GameDataChangedListener>();
+		fieldListeners = new ArrayList<GameFieldChangedListener>(1);
+		dataListeners = new ArrayList<GameDataChangedListener>(1);
+		eventListeners = new ArrayList<GameEventListener>(1);
 		// --
 		gameState = EGameState.INITIALIZED;
 		// --
 		if (System.getProperty("jku.se.tetris.threshold") != null) {
 			LEVEL_THRESHOLD = Integer.parseInt(System.getProperty("jku.se.tetris.threshold"));
 		}
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private boolean audioOn = true;
+	private boolean newStoneInCenter = true;
+
+	// ---------------------------------------------------------------------------
+
+	@Override
+	public void configure(boolean newStoneInCenter, boolean audioOn) {
+		this.audioOn = audioOn;
+		this.newStoneInCenter = newStoneInCenter;
+	}
+
+	// ---------------------------------------------------------------------------
+
+	@Override
+	public int getWidth() {
+		return width;
+	}
+
+	// ---------------------------------------------------------------------------
+
+	@Override
+	public int getHeight() {
+		return height;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -89,8 +139,10 @@ public class GameFieldImpl implements GameField {
 		notifyLevelChanged();
 		notifyBlocksChanged();
 		// --
-		MidiPlayer.resetBackgroundMusic();
-		MidiPlayer.startBackgroundMusic();
+		if (audioOn) {
+			MidiPlayer.resetBackgroundMusic();
+			MidiPlayer.startBackgroundMusic();
+		}
 		// --
 		try {
 			newStone();
@@ -102,35 +154,46 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	private void checkState() throws InvalidActionException {
-		if (gameState == EGameState.PAUSED || gameState == EGameState.GAMEOVER) {
+		if (gameState != EGameState.PLAYING) {
 			throw new InvalidActionException("action not allowed");
 		}
 	}
 
 	// ---------------------------------------------------------------------------
 
-	@Override
-	public void newStone() throws InvalidActionException {
+	private void newStone() throws InvalidActionException {
 		checkState();
 		// --
 		if (nextStone != null) {
 			activeStone = nextStone;
-			nextStone = RandomStoneFactory.getStone();
+			nextStone = StoneFactory.getStone();
 		} else {
-			activeStone = RandomStoneFactory.getStone();
-			nextStone = RandomStoneFactory.getStone();
+			activeStone = StoneFactory.getStone();
+			nextStone = StoneFactory.getStone();
 		}
 		// --
-		int offset = activeStone.getWidth() > 1 ? -1 : 0;
-		offset = activeStone.getWidth() > 3 ? -2 : offset;
-		// --
-		activeStone.move((width / 2) + offset, 0);
+		if (newStoneInCenter) {
+			//
+			// Position new stone at the center of the top row
+			//
+			int offset = activeStone.getWidth() > 1 ? -1 : 0;
+			offset = activeStone.getWidth() > 3 ? -2 : offset;
+			// --
+			activeStone.move((width / 2) + offset, 0);
+		} else {
+			//
+			// Position new stone at the top left corner of the field
+			//
+			activeStone.move(0, 0);
+		}
 		// --
 		if (checkCollision()) {
 			gameState = EGameState.GAMEOVER;
 			gameDuration = System.currentTimeMillis() - gameStart;
 			// --
-			MidiPlayer.stopBackgroundMusic();
+			if (audioOn) {
+				MidiPlayer.stopBackgroundMusic();
+			}
 			// --
 			notifyGameOver();
 			return;
@@ -164,9 +227,8 @@ public class GameFieldImpl implements GameField {
 
 	// ---------------------------------------------------------------------------
 
-	@Override
 	public Block[][] getBlocks() {
-		return blocks.clone();
+		return this.blocks;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -196,6 +258,7 @@ public class GameFieldImpl implements GameField {
 				activeStone.rotateCounterClockwise();
 			} else {
 				notifyStoneMoved(activeStone.getX(), activeStone.getY());
+				notifyStoneRotatedClockwise();
 			}
 		}
 	}
@@ -211,6 +274,7 @@ public class GameFieldImpl implements GameField {
 				activeStone.rotateClockwise();
 			} else {
 				notifyStoneMoved(activeStone.getX(), activeStone.getY());
+				notifyStoneRotatedCounterClockwise();
 			}
 		}
 	}
@@ -231,6 +295,7 @@ public class GameFieldImpl implements GameField {
 				activeStone.move(x, y);
 			} else {
 				notifyStoneMoved(x, y);
+				notifyStoneMovedLeft();
 			}
 		}
 	}
@@ -251,6 +316,7 @@ public class GameFieldImpl implements GameField {
 				activeStone.move(x, y);
 			} else {
 				notifyStoneMoved(x, y);
+				notifyStoneMovedRight();
 			}
 		}
 	}
@@ -270,6 +336,13 @@ public class GameFieldImpl implements GameField {
 			// blocks
 			if (checkCollision()) {
 				activeStone.move(x, y);
+				// --
+				if (activeStone.getY() + activeStone.getHeight() == height) {
+					notifyStoneAtBottom();
+				} else {
+					notifyStoneCollision();
+				}
+				// --
 				stoneToBlocks();
 				newStone();
 			} else {
@@ -299,6 +372,12 @@ public class GameFieldImpl implements GameField {
 			notifyStoneMoved(x, y);
 			// --
 			calculateScoreFreefall(activeStone.getY() - y);
+			// --
+			if (activeStone.getY() + activeStone.getHeight() == height) {
+				notifyStoneAtBottom();
+			} else {
+				notifyStoneCollision();
+			}
 			// --
 			stoneToBlocks();
 			newStone();
@@ -333,6 +412,21 @@ public class GameFieldImpl implements GameField {
 	public void removeDataChangedListener(GameDataChangedListener listener) {
 		if (dataListeners.contains(listener)) {
 			dataListeners.remove(listener);
+		}
+
+	}
+
+	@Override
+	public void addGameEventListener(GameEventListener listener) {
+		if (!eventListeners.contains(listener)) {
+			eventListeners.add(listener);
+		}
+	}
+
+	@Override
+	public void removeGameEventListener(GameEventListener listener) {
+		if (eventListeners.contains(listener)) {
+			eventListeners.remove(listener);
 		}
 
 	}
@@ -404,6 +498,13 @@ public class GameFieldImpl implements GameField {
 			}
 			// --
 			calculateScore(tmpRows.size());
+			// --
+			int[] rows = new int[tmpRows.size()];
+			for (int r = 0; r < tmpRows.size(); r++) {
+				rows[r] = tmpRows.get(r) + 1;
+			}
+			// --
+			notifyRowComplete(rows);
 		}
 	}
 
@@ -495,6 +596,50 @@ public class GameFieldImpl implements GameField {
 	private void notifyGameOver() {
 		for (GameDataChangedListener l : dataListeners) {
 			l.gameOver(score, level, gameDuration);
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+
+	private void notifyStoneMovedLeft() {
+		for (GameEventListener l : eventListeners) {
+			l.stoneMovedLeft();
+		}
+	}
+
+	private void notifyStoneMovedRight() {
+		for (GameEventListener l : eventListeners) {
+			l.stoneMovedRight();
+		}
+	}
+
+	private void notifyStoneAtBottom() {
+		for (GameEventListener l : eventListeners) {
+			l.stoneAtBottom();
+		}
+	}
+
+	private void notifyStoneCollision() {
+		for (GameEventListener l : eventListeners) {
+			l.stoneCollision();
+		}
+	}
+
+	private void notifyStoneRotatedClockwise() {
+		for (GameEventListener l : eventListeners) {
+			l.stoneRotatedClockwise();
+		}
+	}
+
+	private void notifyStoneRotatedCounterClockwise() {
+		for (GameEventListener l : eventListeners) {
+			l.stoneRotatedCounterClockwise();
+		}
+	}
+
+	private void notifyRowComplete(int[] rows) {
+		for (GameEventListener l : eventListeners) {
+			l.rowComplete(rows);
 		}
 	}
 }
