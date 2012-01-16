@@ -13,7 +13,6 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <file path="/Tetris/.classpath"/>
         <javaElement handleIdentifier="=Tetris/src"/>
-        <file path="/Tetris/.project"/>
-        <file path="/Tetris/Generate JAR File.jardesc"/>
+        <file path="/Tetris/.project"/>        
     </selectedElements>
 </jardesc>
