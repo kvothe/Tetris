@@ -5,7 +5,6 @@ import jku.se.tetris.control.RealTimeController;
 import jku.se.tetris.control.TurnBasedController;
 import jku.se.tetris.model.GameField;
 import jku.se.tetris.model.GameFieldImpl;
-import jku.se.tetris.model.stones.StoneFactory;
 import jku.se.tetris.ui.UserInterface;
 import jku.se.tetris.ui.swing.SwingInterface;
 import jku.se.tetris.ui.text.TextInterface;
@@ -41,8 +40,10 @@ public class Tetris {
 		gamefield = new GameFieldImpl(width, height);
 		// --
 		if (textInterface) {
-			gamefield.configure(false, false);
-			StoneFactory.configure(true);
+			//
+			// Configure the gamefield for special behavior in accordance to assignment #5
+			//
+			gamefield.configure(true, false, false);
 			// --
 			controller = new TurnBasedController(gamefield);
 			userinterface = new TextInterface(gamefield, controller);

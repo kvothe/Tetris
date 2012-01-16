@@ -24,7 +24,8 @@ public class TurnBasedController implements GameController {
 			MOVE_NOTHING, MOVE_RIGHT, MOVE_LEFT, MOVE_ROTATE, MOVE_DOWN, // every possible move
 			MOVE_RIGHT, MOVE_RIGHT, MOVE_DOWN,
 			MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_DOWN,
-			MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_DOWN, // FULL ROW						
+			MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_RIGHT, MOVE_DOWN, // FULL ROW
+			MOVE_DOWN, MOVE_DOWN, MOVE_DOWN, MOVE_DOWN,	MOVE_DOWN, MOVE_DOWN, MOVE_DOWN, MOVE_DOWN, MOVE_DOWN, MOVE_DOWN // end game
 	};
 	//@formatter:on
 
@@ -89,13 +90,13 @@ public class TurnBasedController implements GameController {
 	// ---------------------------------------------------------------------------
 
 	public void pause() {
-		// not yet implemented
+		// not implemented
 	}
 
 	// ---------------------------------------------------------------------------
 
 	public void resume() {
-		// not yet impelemented
+		// not implemented
 	}
 
 	// ---------------------------------------------------------------------------
@@ -110,8 +111,7 @@ public class TurnBasedController implements GameController {
 		if (currentMove < MOVE_LIST.length) {
 			return MOVE_LIST[currentMove++];
 		} else {
-			return (int) (Math.random() * 10) % 7; // allow 2 slots for priority
-													// move
+			return (int) (Math.random() * 10) % 5;
 		}
 	}
 

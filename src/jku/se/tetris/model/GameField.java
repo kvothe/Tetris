@@ -21,7 +21,7 @@ public interface GameField {
 	 * @param audioOn
 	 *            true if audio should be enabled, false otherwise.
 	 */
-	public void configure(boolean newStoneInCenter, boolean audioOn);
+	public void configure(boolean squareBlockOnly, boolean newStoneInCenter, boolean audioOn);
 
 	/**
 	 * @return The width of the game field.

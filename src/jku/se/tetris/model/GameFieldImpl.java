@@ -100,9 +100,11 @@ public class GameFieldImpl implements GameField {
 	// ---------------------------------------------------------------------------
 
 	@Override
-	public void configure(boolean newStoneInCenter, boolean audioOn) {
+	public void configure(boolean squareBlocksOnly, boolean newStoneInCenter, boolean audioOn) {
 		this.audioOn = audioOn;
 		this.newStoneInCenter = newStoneInCenter;
+		// --
+		StoneFactory.configure(squareBlocksOnly);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -242,7 +244,7 @@ public class GameFieldImpl implements GameField {
 
 	@Override
 	public Stone getNextStone() {
-		return null;
+		return nextStone;
 	}
 
 	// ---------------------------------------------------------------------------
