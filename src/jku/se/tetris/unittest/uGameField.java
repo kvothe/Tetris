@@ -3,7 +3,6 @@ package jku.se.tetris.unittest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import jku.se.tetris.model.Block;
 import jku.se.tetris.model.GameField;
 import jku.se.tetris.model.GameFieldImpl;
@@ -87,19 +86,9 @@ public class uGameField {
 		assertEquals(ShapeO.class, gamefield.getNextStone().getClass());
 	}
 
-	@Test
-	public void testRotateStoneClockwise() {
-		fail("Not yet implemented");
-	}
-
 	@Test(expected = InvalidActionException.class)
 	public void testRotateStoneClockwiseInvalidState() throws InvalidActionException {
 		gamefield.rotateStoneClockwise();
-	}
-
-	@Test
-	public void testRotateStoneCounterClockwise() {
-		fail("Not yet implemented");
 	}
 
 	@Test(expected = InvalidActionException.class)
@@ -188,5 +177,39 @@ public class uGameField {
 	@Test(expected = InvalidActionException.class)
 	public void testMoveStoneToBottomInvalidState() throws InvalidActionException {
 		gamefield.moveStoneToBottom();
+	}
+
+	@Test
+	public void testRowComplete() throws InvalidActionException {
+		gamefield.configure(true, false, false);
+		// --
+		gamefield.newGame();
+		gamefield.moveStoneToBottom();
+		// --
+		assertNotNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 1][0]);
+		assertNotNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 1][1]);
+		assertNotNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 2][0]);
+		assertNotNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 2][1]);
+		// --
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneToBottom();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneToBottom();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneRight();
+		gamefield.moveStoneToBottom();
+		// --
+		assertNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 1][0]);
+		assertNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 1][1]);
+		assertNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 2][0]);
+		assertNull(gamefield.getBlocks()[GAMEFIELD_HEIGHT - 2][1]);
 	}
 }

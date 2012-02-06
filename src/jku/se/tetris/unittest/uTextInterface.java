@@ -10,6 +10,8 @@ import jku.se.tetris.model.GameField;
 import jku.se.tetris.model.GameFieldImpl;
 import jku.se.tetris.ui.text.TextInterface;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,13 +23,7 @@ public class uTextInterface {
 
 	private static TextInterface textui;
 	private static ByteArrayOutputStream stdout;
-
-	// ---------------------------------------------------------------------------
-
-	private static void resetStdOut() throws IOException {
-		stdout.flush();
-		stdout.reset();
-	}
+	private static PrintStream systemout;
 
 	// ---------------------------------------------------------------------------
 
@@ -41,6 +37,7 @@ public class uTextInterface {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		// Redirect System.out
+		systemout = System.out;
 		stdout = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(stdout));
 		//
@@ -54,6 +51,24 @@ public class uTextInterface {
 
 	// ---------------------------------------------------------------------------
 
+	@AfterClass
+	public static void teardown() throws Exception {
+		// Restore System.out
+		System.setOut(systemout);
+	}
+
+	// ---------------------------------------------------------------------------
+
+	@Before
+	public void beforeTest() throws Exception {
+		// Flush and reset output stream to ensure an empty buffer before every
+		// test
+		stdout.flush();
+		stdout.reset();
+	}
+
+	// ---------------------------------------------------------------------------
+
 	@Test
 	public void testBeginn() {
 		// This case could only be tested with a gamefield and a controller
@@ -61,16 +76,13 @@ public class uTextInterface {
 
 	@Test
 	public void testStoneMovedLeft() throws IOException {
-		resetStdOut();
-		// --
 		textui.stoneMovedLeft();
 		// --
 		assertEquals("Stone moved to left" + LINE_SEPARATOR, getStdOut());
 	}
+
 	@Test
 	public void testStoneMovedRight() throws IOException {
-		resetStdOut();
-		// --
 		textui.stoneMovedRight();
 		// --
 		assertEquals("Stone moved to right" + LINE_SEPARATOR, getStdOut());
@@ -78,8 +90,6 @@ public class uTextInterface {
 
 	@Test
 	public void testStoneRotatedClockwise() throws IOException {
-		resetStdOut();
-		// --
 		textui.stoneRotatedClockwise();
 		// --
 		assertEquals("Stone rotated" + LINE_SEPARATOR, getStdOut());
@@ -87,8 +97,6 @@ public class uTextInterface {
 
 	@Test
 	public void testStoneRotatedCounterClockwise() throws IOException {
-		resetStdOut();
-		// --
 		textui.stoneRotatedCounterClockwise();
 		// --
 		assertEquals("", getStdOut());
@@ -96,8 +104,6 @@ public class uTextInterface {
 
 	@Test
 	public void testStoneCollision() throws IOException {
-		resetStdOut();
-		// --
 		textui.stoneCollision();
 		// --
 		assertEquals("Stone collided with another stone" + LINE_SEPARATOR, getStdOut());
@@ -105,8 +111,6 @@ public class uTextInterface {
 
 	@Test
 	public void testStoneAtBottom() throws IOException {
-		resetStdOut();
-		// --
 		textui.stoneAtBottom();
 		// --
 		assertEquals("Stone at bottom" + LINE_SEPARATOR, getStdOut());
@@ -114,8 +118,6 @@ public class uTextInterface {
 
 	@Test
 	public void testRowComplete() throws IOException {
-		resetStdOut();
-		// --
 		textui.rowComplete(new int[] { 1 });
 		assertEquals("The row 1 has been completed" + LINE_SEPARATOR, getStdOut());
 		// this test case fails due to an error in the implementation
@@ -128,8 +130,6 @@ public class uTextInterface {
 	}
 	@Test
 	public void testScoreChanged() throws IOException {
-		resetStdOut();
-		// --
 		textui.scoreChanged(1);
 		// --
 		assertEquals("Score: 1" + LINE_SEPARATOR, getStdOut());
@@ -137,8 +137,6 @@ public class uTextInterface {
 
 	@Test
 	public void testLevelChanged() throws IOException {
-		resetStdOut();
-		// --
 		textui.levelChanged(1);
 		// --
 		assertEquals("Level: 1" + LINE_SEPARATOR, getStdOut());
@@ -146,8 +144,6 @@ public class uTextInterface {
 
 	@Test
 	public void testGameStarted() throws IOException {
-		resetStdOut();
-		// --
 		textui.gameStarted();
 		// --
 		assertEquals(LINE_SEPARATOR + "-----------------------------------------" + LINE_SEPARATOR + "Game Start!" + LINE_SEPARATOR + "-----------------------------------------" + LINE_SEPARATOR,
@@ -156,8 +152,6 @@ public class uTextInterface {
 
 	@Test
 	public void testGameOver() throws IOException {
-		resetStdOut();
-		// --
 		textui.gameOver(1, 1, 1);
 		// --
 		assertEquals("-----------------------------------------" + LINE_SEPARATOR + "Game Over! Final Score: 1" + LINE_SEPARATOR + "-----------------------------------------" + LINE_SEPARATOR,
